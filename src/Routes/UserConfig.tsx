@@ -29,8 +29,9 @@ const UserConfig = () => {
 	}
 
 	const handleUpdateInfo = async () => {
-    await setDoc(doc(db, 'users', update.username), update)
-		
+    if (user) {
+    await setDoc(doc(db, 'users', user.uid), update)
+    }
 	}
 
 	
@@ -47,6 +48,7 @@ const UserConfig = () => {
       alignItems={"center"}
     >
       <h2>Configure your profile</h2>
+      <Button onClick={ () => setIsUpdating(true)}>Change</Button>
       {isUpdating ? (
         <Box
           component="form"
@@ -76,7 +78,6 @@ const UserConfig = () => {
             type="email"
             required={true}
             color="secondary"
-            value={user?.email}
             onChange={(e) => setUpdate({ ...update, email: e.target.value })}
           />
           <TextField
@@ -111,4 +112,4 @@ const UserConfig = () => {
   );
 }
 
-export default UserConfig
+export default UserConfig;
