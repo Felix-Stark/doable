@@ -21,7 +21,7 @@ type Task = {
 
 const Dashboard = () => {
   const [todo, setTodo] = useState("");
-  const [showTasks, setShowTasks] = useState<Task[] | EmptyTaskList>([]);
+  const [showTasks, setShowTasks] = useState<Task[]>([]);
 
   const navigate = useNavigate();
 

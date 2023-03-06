@@ -138,7 +138,7 @@ export default function NavBar() {
             ))}
           </Box>
 
-            {isUser ? 
+
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open navOptions">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -168,7 +168,7 @@ export default function NavBar() {
 				))}
 				</Menu>
           </Box>
-			: ''}
+
         </Toolbar>
       </Container>
     </AppBar>
