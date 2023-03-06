@@ -6,13 +6,13 @@ import {
   Route,
   useNavigate,
 } from "react-router-dom";
-import SignIn from './Routes/SignIn';
+import SignIn from './routes/SignIn';
 import { ThemeProvider } from '@mui/material/styles'
 import { darkTheme } from './Themes';
 import NavBar from './components/NavBar';
 
-import Dashboard from './Routes/Dashboard';
-import UserConfig from './Routes/UserConfig';
+import Dashboard from './routes/Dashboard';
+import UserConfig from './routes/UserConfig';
 import { auth } from './firebase-config';
 import QuickMenu from './components/QuickMenu';
 
