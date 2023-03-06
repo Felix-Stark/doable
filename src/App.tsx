@@ -35,7 +35,6 @@ function App() {
     <ThemeProvider theme={ darkTheme }>
 
     <Router>
-      {isUser ? <QuickMenu /> : '' }
       <NavBar />
       <Routes>
         <Route path="/" element={ <SignIn /> } />

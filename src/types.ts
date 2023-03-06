@@ -33,10 +33,13 @@ export type TodoList = {
 }
 
 export type Message = {
+	messageId: string;
 	senderId: string;
 	recieverId: string;
 	content: string;
 	timestamp: string;
+	// recevied: boolean;
+	// read: boolean; 
 }
 
 export type ChatRoom = {
