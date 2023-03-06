@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { auth, db } from "../firebase-config";
 import { signOut } from "firebase/auth";
 import { uid } from "uid";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Box, SpeedDial, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import QuickTask from "../components/QuickMenu";
 import { ThemeProvider } from "@emotion/react";
 import * as theme from "../Themes";
 
-import { onValue, ref, set } from "firebase/database";
+// import { onValue, ref, set } from "firebase/database"; // Realtime Database
 
-type EmptyTaskList = [];
+
 type Task = {
   taskId: string;
   title: string;

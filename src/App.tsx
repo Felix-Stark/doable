@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
 import {
   HashRouter as Router,
@@ -14,17 +13,29 @@ import NavBar from './components/NavBar';
 
 import Dashboard from './Routes/Dashboard';
 import UserConfig from './Routes/UserConfig';
+import { auth } from './firebase-config';
+import QuickMenu from './components/QuickMenu';
 
 function App() {
   const [count, setCount] = useState(0)
   const [isUser, setIsUser] = useState<boolean>(false)
 
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsUser(true)
+      } else {
+        setIsUser(false)
+      }
+    })
+  }, [])
 
 
   return (
     <ThemeProvider theme={ darkTheme }>
 
     <Router>
+      {isUser ? <QuickMenu /> : '' }
       <NavBar />
       <Routes>
         <Route path="/" element={ <SignIn /> } />
