@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase-config";
+import { collection } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router";
-import { Box, Container, TextField,  } from "@mui/material";
+import { Box, Container, TextField, CardMedia } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 // import * as theme from "../components/theme";
 import { ref, set } from "firebase/database";
+import backdrop from '../assets/backdrop.png'
+import { DoableUser } from "../types";
+
 
 export default function Welcome() {
   const [isLoading, setIsLoading] = useState(true);
@@ -51,7 +56,10 @@ export default function Welcome() {
       .catch((err) => alert(err.message));
   };
 
-  const handleRegister = () => {
+  const createUserCollection = async () => {
+  }
+
+  const handleRegister = async () => {
     if (registerInfo.email !== registerInfo.confirmEmail) {
       alert("Please confirm that email are correct");
       return;
@@ -66,23 +74,27 @@ export default function Welcome() {
       registerInfo.password
     )
       .then(() => {
-        navigate("/homepage");
+    	navigate("/user-settings");
+		
+    
+      createUserCollection()
       })
       .catch((err) => alert(err.message));
   };
 
   return (
-    < >
-      <Grid
-        container
-        flexDirection={"column"}
-        spacing={10}
-        margin={"0 auto"}
-        width={"80%"}
-        minHeight={"100vh"}
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
+    
+	<Grid
+	container
+	flexDirection={"column"}
+	spacing={10}
+	margin={"0 auto"}
+	minWidth={"100vw"}
+	minHeight={"100vh"}
+	justifyContent={"center"}
+	alignItems={"center"}
+	zIndex={2000}
+	>
         <h1>doable</h1>
         <Grid flexDirection={"column"} alignItems={"center"} spacing={"5"}>
           {isRegistering ? (
@@ -96,6 +108,7 @@ export default function Welcome() {
                   alignItems: "center",
                   minHeight: "10em",
                 }}
+                zIndex={"2"}
               >
                 <TextField
                   label="Email"
@@ -170,7 +183,7 @@ export default function Welcome() {
                   flexDirection: "column",
                   justifyContent: "space-evenly",
                   alignItems: "center",
-                  height: "10em",
+                  minHeight: "10em",
                 }}
               >
                 <TextField
@@ -209,6 +222,6 @@ export default function Welcome() {
           )}
         </Grid>
       </Grid>
-    </>
+    
   );
 }
