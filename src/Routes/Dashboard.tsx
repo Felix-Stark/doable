@@ -8,6 +8,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import QuickTask from "../components/QuickMenu";
 import { ThemeProvider } from "@emotion/react";
 import * as theme from "../Themes";
+import AddTodo from "../components/AddTodo";
 
 // import { onValue, ref, set } from "firebase/database"; // Realtime Database
 
@@ -36,30 +37,33 @@ const Dashboard = () => {
   });
 
   return (
-    <ThemeProvider theme={theme.lightTheme}>
+<ThemeProvider theme={ theme.darkTheme }>
       <Grid
+        display={"flex"}
+        flexDirection={'column'}
         justifyContent={"center"}
+        alignItems={'center'}
         minHeight={"100vh"}
         margin={"0 auto"}
         minWidth={"100vw"}
+        sx={{background: theme.darkTheme.palette?.background?.default}}
       >
-        <Typography component={"h2"} mt={10} maxHeight={"2em"}>
-          Tasks
-        </Typography>
-
         <Box
-          width={"100%"}
+          width={"80%"}
+          minHeight={"100%"}
           display={"flex"}
           flexDirection={"column"}
           alignItems={"center"}
+          position={"relative"}
+
         >
-          
-        </Box>
-        <Box position={"fixed"} bottom={0} right={2}>
-          <QuickTask />
+          <AddTodo />
+          <Box position={'absolute'} bottom={5} right={5} >
+            <QuickTask />
+          </Box>
         </Box>
       </Grid>
-    </ThemeProvider>
+</ThemeProvider>
   );
 };
 
