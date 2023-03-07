@@ -21,7 +21,7 @@ type Task = {
 
 const Dashboard = () => {
   const [todo, setTodo] = useState("");
-  const [showTasks, setShowTasks] = useState<Task[]>([]);
+  const [showTasks, setShowTasks] = useState<Task[] | EmptyTaskList>([]);
 
   const navigate = useNavigate();
 
@@ -43,9 +43,27 @@ const Dashboard = () => {
         margin={"0 auto"}
         minWidth={"100vw"}
       >
+        <Box
+          width={"100%"}
+          display={"flex"}
+          flexDirection={"column"}
+          alignItems={"center"}
+        >
+          <Typography component={"h1"} mt={10} maxHeight={"2em"}>
+            Chat history
+          </Typography>
+        </Box>
+
+        <Box
+          width={"100%"}
+          display={"flex"}
+          flexDirection={"column"}
+          alignItems={"center"}
+        >
         <Typography component={"h2"} mt={10} maxHeight={"2em"}>
           Tasks
         </Typography>
+        </Box>
 
         <Box
           width={"100%"}
