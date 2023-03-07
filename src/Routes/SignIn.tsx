@@ -15,6 +15,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { ref, set } from "firebase/database";
 import backdrop from '../assets/backdrop.png'
 import { DoableUser } from "../types";
+import { BlurOn } from "@mui/icons-material";
 
 
 export default function Welcome() {
@@ -184,6 +185,8 @@ export default function Welcome() {
                   justifyContent: "space-evenly",
                   alignItems: "center",
                   minHeight: "10em",
+                  backgroundImage: backdrop,
+                  backdrop: 'blur(8px)'
                 }}
               >
                 <TextField

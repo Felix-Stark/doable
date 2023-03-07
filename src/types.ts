@@ -10,7 +10,7 @@ export type DoableUser = {
 }
 
 export type Task = {
-	todoId: string;
+	taskId: string;
 	title: string;
 	description: string;
 	created_at: string;
@@ -21,13 +21,14 @@ export type Task = {
 }
 
 export type Todo = {
+	id: string;
 	title: string;
 	is_done: boolean;
 }
 
 export type TodoList = {
 	listId: string;
-	todos: Task[]
+	title: string;
 	created_by: string;
 	shared_with: string;
 }

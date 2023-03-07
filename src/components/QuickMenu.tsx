@@ -7,12 +7,12 @@ import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import PrintIcon from "@mui/icons-material/Print";
 import ShareIcon from "@mui/icons-material/Share";
+import CreateIcon from "@mui/icons-material/Create";
+import AddCommentIcon from "@mui/icons-material/AddComment";
 
 const actions = [
-  { icon: <FileCopyIcon />, name: "Copy" },
-  { icon: <SaveIcon />, name: "Save" },
-  { icon: <PrintIcon />, name: "Print" },
-  { icon: <ShareIcon />, name: "Share" },
+  { icon: <CreateIcon />, name: "New todo" },
+  { icon: <AddCommentIcon />, name: "New message" },
 ];
 
 export default function QuickTask() {
