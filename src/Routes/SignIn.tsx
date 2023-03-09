@@ -1,61 +1,57 @@
 import React, { useEffect, useState } from "react";
 import {
+	browserLocalPersistence,
   createUserWithEmailAndPassword,
+  setPersistence,
   signInWithEmailAndPassword,
   updateProfile,
+  User,
 } from "firebase/auth";
 import { auth, db } from "../firebase-config";
-import { collection } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router";
 import { Box, Container, TextField, CardMedia } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 // import * as theme from "../components/theme";
-import { ref, set } from "firebase/database";
+
 import backdrop from '../assets/backdrop.png'
 import { DoableUser } from "../types";
 import { BlurOn } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { showLoader } from "../features/apiSlice";
+
 
 // Google sign in 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
 
 
-export default function Welcome() {
-  // För google login , provat runt // Chris
+export default function SignIn() {
   
-  const [user, setUser] = useState(false);
-
-  const googleSignIn = () => {
-    const provider = new GoogleAuthProvider();
-    signInWithRedirect(auth, provider);
-  };
-  const signOut = () => {
-    auth.signOut();
-  };
-
-  //
-
-
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [registerInfo, setRegisterInfo] = useState({
+	username: "",
     email: "",
     confirmEmail: "",
     password: "",
     confirmPassword: "",
   });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const googleSignIn = () => {
+      const provider = new GoogleAuthProvider();
+      signInWithRedirect(auth, provider);
+  };
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
+      if (auth.currentUser) {
         navigate("/dashboard");
       }
-    });
   });
 
   const handleEmailChange = (e: {
@@ -68,16 +64,18 @@ export default function Welcome() {
   }) => {
     setPassword(e.target.value);
   };
-  const handleSignIn = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigate("/dashboard");
-      })
-      .catch((err) => alert(err.message));
-  };
 
-  const createUserCollection = async () => {
-  }
+
+  const handleSignIn = () => {
+	  setPersistence(auth, browserLocalPersistence)
+		.then(() => {
+		  
+		  return signInWithEmailAndPassword(auth, email, password);
+		})
+      .catch((err) => alert(err.message));
+        navigate("/dashboard");
+
+  };
 
   const handleRegister = async () => {
     if (registerInfo.email !== registerInfo.confirmEmail) {
@@ -92,14 +90,9 @@ export default function Welcome() {
       auth,
       registerInfo.email,
       registerInfo.password
-    )
-      .then(() => {
-    	navigate("/user-settings");
-		
-    
-      createUserCollection()
-      })
-      .catch((err) => alert(err.message));
+    ).catch((err) => alert(err.message));
+	navigate('/user-settings')
+	  
   };
 
   return (

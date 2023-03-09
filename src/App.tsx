@@ -26,22 +26,11 @@ function App() {
   const [isUser, setIsUser] = useState<boolean>(false)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    auth.onAuthStateChanged( async (user) => {
-      if (user) {
-        const userRef = doc(db, user.uid, 'todoLists');
-        const userSnap = await getDoc(userRef)
-        if(userSnap.exists()) {
-          console.log(userSnap.data())
-        }
-      }
-    })
-
-  })
+  
 
 
   return (
-    <ThemeProvider theme={ darkTheme }>
+    <ThemeProvider theme={ lightTheme }>
       <Grid
         container
         flexDirection={"column"}
@@ -51,7 +40,7 @@ function App() {
         minHeight={"100vh"}
         justifyContent={"center"}
         alignItems={"center"}
-        sx={{ bgcolor: darkTheme.palette?.background?.default }}
+
       >
         
 
