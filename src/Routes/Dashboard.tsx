@@ -9,6 +9,7 @@ import QuickTask from "../components/QuickMenu";
 import { ThemeProvider } from "@emotion/react";
 import * as theme from "../Themes";
 import AddTodo from "../components/AddTodo";
+import ChatComp from "../components/ChatComp";
 
 // import { onValue, ref, set } from "firebase/database"; // Realtime Database
 
@@ -22,7 +23,7 @@ type Task = {
 
 const Dashboard = () => {
   const [todo, setTodo] = useState("");
-  const [showTasks, setShowTasks] = useState<Task[] | EmptyTaskList>([]);
+  const [showTasks, setShowTasks] = useState<Task[] | null>(null);
 
   const navigate = useNavigate();
 
@@ -55,7 +56,7 @@ const Dashboard = () => {
           alignItems={"center"}
         >
           <Typography component={"h1"} mt={10} maxHeight={"2em"}>
-            Chat history
+            <ChatComp />
           </Typography>
         </Box>
 

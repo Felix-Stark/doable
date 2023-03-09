@@ -20,7 +20,10 @@ import * as theme from "../Themes";
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
+
+
 function MenuBar() {
+  
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -141,7 +144,7 @@ function MenuBar() {
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
-                  {page}
+                  {/* {page}  Bort kommenterar denna tillfälligt*/  }  
                 </Button>
               ))}
             </Box>

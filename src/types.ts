@@ -39,6 +39,7 @@ export type Message = {
 	recieverId: string;
 	content: string;
 	timestamp: string;
+	avatar_url: string;
 	// recevied: boolean;
 	// read: boolean; 
 }

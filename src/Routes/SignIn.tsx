@@ -17,8 +17,27 @@ import backdrop from '../assets/backdrop.png'
 import { DoableUser } from "../types";
 import { BlurOn } from "@mui/icons-material";
 
+// Google sign in 
+import { useAuthState } from "react-firebase-hooks/auth";
+import { GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
+
 
 export default function Welcome() {
+  // För google login , provat runt // Chris
+  
+  const [user, setUser] = useState(false);
+
+  const googleSignIn = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithRedirect(auth, provider);
+  };
+  const signOut = () => {
+    auth.signOut();
+  };
+
+  //
+
+
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -219,6 +238,9 @@ export default function Welcome() {
                   onClick={() => setIsRegistering(true)}
                 >
                   Create an account
+                </Button>
+                <Button onClick={googleSignIn} variant="outlined" >
+                  Sign in with Google
                 </Button>
               </Stack>
             </>
