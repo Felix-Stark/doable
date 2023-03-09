@@ -51,15 +51,21 @@ const AddTodo = () => {
 
 	}
 
-	const handleCreateTodo = async () => {
-		setNewTodo({
-			...newTodo,
-			id: uid(),
-		})
-		if ( auth.currentUser ) {
-			await addDoc(collection(db, auth.currentUser.uid, 'todoLists', newList.title, newTodo.title), newTodo)
-		}
-	}
+  const handleCreateTodo = async () => {
+    const todoToAdd = {
+      id: uid(),
+      title: newTodo.title,
+      is_done: false
+    };
+    if (auth.currentUser) {
+      await addDoc(
+        collection(db, "users", auth.currentUser.uid, "todoLists", selectedList, "todos"),
+        todoToAdd
+      );
+    }
+  };
+  
+	
 
 	const getTodoLists = async () => {
 		auth.onAuthStateChanged(async (user) => {

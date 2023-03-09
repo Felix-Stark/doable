@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { auth, db } from '../firebase-config';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
-const SendMessage = () => {
+
+interface SendMessageProps {
+    scroll: React.RefObject<HTMLSpanElement>;
+}
+
+const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
     const [message, setMessage] = useState(''); // Skapar en state för meddelandet som sätts till en tom sträng
 
     // Skapar en sendMessage funktion som körs när användaren klickar på button Submit
@@ -16,12 +22,14 @@ const SendMessage = () => {
     // Det kommer också skapa en ny dokument i collectionen med ett unikt id som är skapat av firebase. Dessa keys är unika för varje dokument och kan användas för att identifiera dokumenten och läsa eller skriva till dem.
 
     const sendMessage = async (event: any) => { 
+    const [user]: | any = useAuthState(auth);
+
         event.preventDefault();
         if (message.trim() === '') {
             alert('Please enter a message');
             return;
         }
-        const { uid, displayName, photoURL } = auth.currentUser;
+        const { uid, displayName, photoURL } = user;  // Run a dispatch för användarens inloggade uid, namn och profilbild 
         await addDoc(collection(db, 'messages'), {
             text: message,
             name: displayName,
@@ -30,6 +38,8 @@ const SendMessage = () => {
             uid,
         });
         setMessage('');
+        scroll.current?.scrollIntoView({ behavior: 'smooth' });
+
     };
 
 
@@ -38,7 +48,7 @@ const SendMessage = () => {
         <label htmlFor='messageInput' hidden>
             Write message
         </label>
-        <input type='text' id='messageInput' placeholder='Write message' onChange={(e) => setMessage (e.target.value)} /> 
+        <input type='text' id='messageInput' placeholder='Write message' value={message} onChange={(e) => setMessage (e.target.value)} /> 
         {/* // onChange eventet sätter meddelandet till det som skrivs i input fältet */}
         <button type='submit'>Send</button>
     </form>

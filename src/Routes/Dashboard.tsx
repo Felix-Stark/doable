@@ -56,9 +56,9 @@ const Dashboard = () => {
           alignItems={"center"}
         >
           <Typography component={"h1"} mt={10} maxHeight={"2em"}>
-            <ChatComp />
           </Typography>
         </Box>
+            <ChatComp />
 
         <Box
           width={"100%"}

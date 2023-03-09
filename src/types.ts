@@ -34,6 +34,7 @@ export type TodoList = {
 }
 
 export type Message = {
+	id: string;
 	messageId: string;
 	senderId: string;
 	recieverId: string;
