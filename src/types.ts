@@ -1,11 +1,8 @@
 export type DoableUser = {
 	doUserId: string;
-	userName: string;
-	name: string;
-	surname: string;
+	username: string;
 	email: string;
 	avatar_url: string;
-	contacts: string[];
 	darkMode: boolean;
 }
 
@@ -21,16 +18,17 @@ export type Task = {
 }
 
 export type Todo = {
-	id: string;
 	title: string;
+	in_list: string; //listTitle
 	is_done: boolean;
+	timestamp: string;
 }
 
 export type TodoList = {
-	listId: string;
 	title: string;
+	collaborator: string;
 	created_by: string;
-	shared_with: string;
+	timestamp: string;
 }
 
 export type Message = {

@@ -1,13 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "firebase/auth";
+import { DoableUser } from "../types"; 
 
 const initialState = {
   themeMode: true, //lightMode = true, darkMode = false
-  currentTask: {}, // onClick saveTask -> setCurrent task until task is written to database
+  currentList: {}, // chosen list of todos to be displayed, get w
   showTaskForm: false, //onClick newTask set true
   selectedTask: {}, // for update task
-  toggleLoader: true,
-  user: ({} as User) || undefined,
+  toggleLoader: false,
+  doUser: {} as DoableUser,
 };
 
 export const apiSlice = createSlice({
@@ -20,8 +21,8 @@ export const apiSlice = createSlice({
     showLoader: (state, action: PayloadAction<boolean>) => {
       state.toggleLoader = action.payload;
     },
-    currentUser: (state, action: PayloadAction<User>) => {
-      state.user = action.payload;
+    currentUser: (state, action: PayloadAction<DoableUser>) => {
+      state.doUser = action.payload;
     },
   },
 });

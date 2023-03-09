@@ -9,6 +9,7 @@ import QuickTask from "../components/QuickMenu";
 import { ThemeProvider } from "@emotion/react";
 import * as theme from "../Themes";
 import AddTodo from "../components/AddTodo";
+import { collection, DocumentData, getDocs, onSnapshot } from "firebase/firestore";
 
 // import { onValue, ref, set } from "firebase/database"; // Realtime Database
 
@@ -22,6 +23,7 @@ type Task = {
 
 const Dashboard = () => {
   const [todo, setTodo] = useState("");
+  const [todos, setTodos] = useState<DocumentData[]>()
   const [showTasks, setShowTasks] = useState<Task[]>([]);
 
   const navigate = useNavigate();
@@ -30,14 +32,17 @@ const Dashboard = () => {
     auth.onAuthStateChanged((user) => {
       if (!user) {
         navigate("/");
+      } else {
+        onSnapshot(collection(db, "todos"), (snapshot) => {
+          setTodos(snapshot.docs.map((doc) => doc.data()));
+        });
+
       }
-      
-      
     });
-  });
+  }, []);
 
   return (
-<ThemeProvider theme={ theme.darkTheme }>
+
       <Grid
         display={"flex"}
         flexDirection={'column'}
@@ -46,11 +51,11 @@ const Dashboard = () => {
         minHeight={"100vh"}
         margin={"0 auto"}
         minWidth={"100vw"}
-        sx={{background: theme.darkTheme.palette?.background?.default}}
+
       >
         <Box
           width={"80%"}
-          minHeight={"100%"}
+          minHeight={"80vh"}
           display={"flex"}
           flexDirection={"column"}
           alignItems={"center"}
@@ -58,12 +63,12 @@ const Dashboard = () => {
 
         >
           <AddTodo />
+        </Box>
           <Box position={'absolute'} bottom={5} right={5} >
             <QuickTask />
           </Box>
-        </Box>
       </Grid>
-</ThemeProvider>
+
   );
 };
 

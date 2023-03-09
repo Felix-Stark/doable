@@ -18,7 +18,7 @@ import { useNavigate } from "react-router";
 import { ThemeProvider } from "@emotion/react";
 import * as theme from "../Themes";
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Account", "Dashboard", "Logout"];
 
 function MenuBar() {
   const navigate = useNavigate();
@@ -44,6 +44,10 @@ function MenuBar() {
   const handleCloseUserMenu = (setting: string) => {
     if (setting == "Logout") {
       handleSignOut();
+    } else if( setting == "Account") {
+      navigate('/user-settings')
+    } else if( setting == "Dashboard") {
+      navigate('/dashboard')
     }
     setAnchorElUser(null);
   };
