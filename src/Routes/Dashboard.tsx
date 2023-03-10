@@ -37,6 +37,8 @@ const Dashboard = () => {
 				const getUser = await getDoc(doc(db, 'users', user.email as string))
 				if( getUser ) {
 					dispatch(currentUser(getUser.data() as DoableUser));
+				} else {
+					navigate('/user-settings')
 				}
 				console.log('getUser: ', getUser.data())
 				
