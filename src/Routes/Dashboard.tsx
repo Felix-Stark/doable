@@ -10,8 +10,10 @@ import { ThemeProvider } from "@emotion/react";
 import * as theme from "../Themes";
 import AddTodo from "../components/AddTodo";
 import ChatComp from "../components/ChatComp";
-import { collection, DocumentData, getDocs, onSnapshot } from "firebase/firestore";
-
+import { collection, DocumentData, getDocs, onSnapshot, query, where, doc, getDoc } from "firebase/firestore";
+import { useDispatch } from 'react-redux'
+import { currentUser } from "../features/apiSlice";
+import { DoableUser } from "../types";
 // import { onValue, ref, set } from "firebase/database"; // Realtime Database
 
 
@@ -26,21 +28,23 @@ const Dashboard = () => {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState<DocumentData[]>()
   const [showTasks, setShowTasks] = useState<Task[]>([]);
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (!user) {
-        navigate("/");
-      } else {
-        onSnapshot(collection(db, "todos"), (snapshot) => {
-          setTodos(snapshot.docs.map((doc) => doc.data()));
-        });
-
-      }
-    });
-  }, []);
+	useEffect(() => {
+		auth.onAuthStateChanged( async (user) => {
+			if ( user ) {
+				const getUser = await getDoc(doc(db, 'users', user.email as string))
+				if( getUser ) {
+					dispatch(currentUser(getUser.data() as DoableUser));
+				}
+				console.log('getUser: ', getUser.data())
+				
+			} else {
+				navigate('/')
+			}
+		})
+	})
 
   return (
 
