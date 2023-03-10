@@ -16,14 +16,28 @@ import { signOut, User } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { useNavigate } from "react-router";
 import { ThemeProvider } from "@emotion/react";
+
+// For Header MUI
+import PropTypes from 'prop-types';
+import Grid from '@mui/material/Grid';
+import HelpIcon from '@mui/icons-material/Help';
+import Link from '@mui/material/Link';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+
+
 import * as theme from "../Themes";
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Account", "Dashboard", "Logout"];
+const lightColor = "rgba(255, 255, 255, 0.7)";
 
 
-
-function MenuBar() {
+function MenuBar(props: { onDrawerToggle: any; }) {
+  // Added by me
+  const { onDrawerToggle } = props;
   
+
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -63,6 +77,7 @@ function MenuBar() {
   };
 
   return (
+    <React.Fragment>
 
       <AppBar position="fixed">
         <Container maxWidth="xl">
@@ -188,7 +203,7 @@ function MenuBar() {
           </Toolbar>
         </Container>
       </AppBar>
-
+    </React.Fragment>
   );
 }
 export default MenuBar;
