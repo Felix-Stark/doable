@@ -6,13 +6,13 @@ import {
   Route,
   useNavigate,
 } from "react-router-dom";
-import SignIn from './routes/SignIn';
+import SignIn from './Routes/SignIn';
 import { ThemeProvider } from '@mui/material/styles'
 import { darkTheme, lightTheme } from './Themes';
 import NavBar from './components/NavBar';
 
-import Dashboard from './routes/Dashboard';
-import UserConfig from './routes/UserConfig';
+import Dashboard from './Routes/Dashboard';
+import UserConfig from './Routes/UserConfig';
 import { auth, db } from './firebase-config';
 
 import Grid from '@mui/system/Unstable_Grid/Grid';
@@ -45,7 +45,6 @@ function App() {
         
 
         <Router>
-          <NavBar />
           <Routes>
             <Route path="/" element={ <SignIn /> } />
             <Route path='/user-settings' element={ <UserConfig /> } /> 
