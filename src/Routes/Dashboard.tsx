@@ -20,6 +20,8 @@ import { DoableUser } from "../types";
 import Link from '@mui/material/Link';
 import Navigator from '../components/Navigator';
 import NavBar from '../components/NavBar';
+import { Copyright } from "@mui/icons-material";
+import Content from "../components/Content";
 
 const drawerWidth = 256;
 
@@ -34,11 +36,11 @@ type Task = {
 
 let theme = createTheme({
   palette: {
-    // primary: {
-    //   light: '#63ccff',
-    //   main: '#009be5',
-    //   dark: '#006db3',
-    // },
+    primary: {
+      light: '#63ccff', 
+      main: '#009be5',
+      dark: '#006db3',
+    },
   },
   typography: {
     h5: {
@@ -70,7 +72,7 @@ theme = {
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          backgroundColor: '#081627',
+          backgroundColor: '#1C1D22',
         },
       },
     },
@@ -139,7 +141,7 @@ theme = {
       styleOverrides: {
         root: {
           '&.Mui-selected': {
-            color: '#4fc3f7',
+            color: '#FFC61A',
           },
         },
       },
@@ -210,8 +212,7 @@ const Dashboard = () => {
 	})
 
   return (
-     <>
-        <NavBar onDrawerToggle={handleDrawerToggle} />
+    <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         <CssBaseline />
         <Box
@@ -220,27 +221,25 @@ const Dashboard = () => {
         >
           {isSmUp ? null : (
             <Navigator
-              PaperProps={{ style: { width: drawerWidth } }}
+            PaperProps={{ style: { width: drawerWidth } }}
               variant="temporary"
               open={mobileOpen}
               onClose={handleDrawerToggle}
-            />
-          )}
-
+              />
+              )}
           <Navigator
             PaperProps={{ style: { width: drawerWidth } }}
             sx={{ display: { sm: 'block', xs: 'none' } }}
           />
         </Box>
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <NavBar onDrawerToggle={handleDrawerToggle} />
           <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-            <AddTodo />
+            <Content />
           </Box>
         </Box>
       </Box>
-     
-     
-     </>
+    </ThemeProvider>
 
   );
 };

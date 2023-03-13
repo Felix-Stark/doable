@@ -27,13 +27,16 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 
 
-import * as theme from "../Themes";
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Account", "Dashboard", "Logout"];
 const lightColor = "rgba(255, 255, 255, 0.7)";
 
+interface MenuBarProps {
+  onDrawerToggle: () => void;
+}
 
-function MenuBar(props: { onDrawerToggle: any; }) {
+
+export default function MenuBar(props: MenuBarProps) {
   // Added by me
   const { onDrawerToggle } = props;
   
@@ -87,7 +90,8 @@ function MenuBar(props: { onDrawerToggle: any; }) {
                 <MenuIcon />
               </IconButton>
             </Grid>
-          <Grid item xs>
+          <Grid item xs />
+          <Grid item >
               <Typography color="inherit" variant="h5" component="h1">
                 Doable
               </Typography>
@@ -106,6 +110,7 @@ function MenuBar(props: { onDrawerToggle: any; }) {
                 }}
                 rel="noopener noreferrer"
                 target="_blank"
+                onClick={ handleSignOut}
               >
                 Log out
               </Link>
@@ -113,7 +118,6 @@ function MenuBar(props: { onDrawerToggle: any; }) {
             <Grid item>
               <Tooltip title="Show • Contact info">
                 <IconButton color="inherit">
-                  {/* <NotificationsIcon /> */}
                   <Grid item>
                     <IconButton color="inherit" sx={{ p: 0.5, backgroundColor: '#FFC61A' }}>
                       <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar" sx={{backgroundColor: '#FFC61A'}}/>
@@ -124,8 +128,9 @@ function MenuBar(props: { onDrawerToggle: any; }) {
             </Grid>
           </Grid>
         </Toolbar>
+        
       </AppBar>
-      <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0,  backgroundColor: '#1C1D22'}}>
+      <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0,  backgroundColor: '#1C1D22'  }}>
         <Tabs value={0} textColor="inherit">
           <Tab label="Todos" />
           <Tab label="Chat" />
@@ -134,6 +139,6 @@ function MenuBar(props: { onDrawerToggle: any; }) {
     </React.Fragment>
   );
 }
-export default MenuBar;
+
 
 

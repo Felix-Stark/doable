@@ -23,35 +23,33 @@ import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-
+import { ExpandLess, ExpandMore, FormatListBulleted, StarBorder } from '@mui/icons-material';
+import Collapse from '@mui/material/Collapse';
+import Tooltip from '@mui/material/Tooltip';
+import InsertCommentIcon from '@mui/icons-material/InsertComment';
 
 const categories = [
   {
     id: 'Messages',
-    icon: <KeyboardArrowDownIcon />,
-    active: true,
     children: [
-      { id: 'Inbox', icon: <HomeIcon />, active: true },
+      { id: 'Inbox', icon: <HomeIcon />},
       { id: 'Starred', icon: <PeopleIcon /> },
-      { id: 'Send message', icon: <DnsRoundedIcon /> },
+      { id: 'Add message', icon: <DnsRoundedIcon /> },
     ],
   },
   {
     id: 'Contacts',
-    icon: <KeyboardArrowDownIcon />,
     children: [
-      { id: 'All contacts', icon: <PermMediaOutlinedIcon /> },
+      { id: 'Add contacts', icon: <PermMediaOutlinedIcon /> },
       { id: 'Groups', icon: <SettingsEthernetIcon /> },
-      { id: 'Labels', icon: <SettingsInputComponentIcon /> },
       { id: 'Settings', icon: <TimerIcon /> },
     ],
   },
 ];
 
-
 const item = {
-  py: '2px',
-  px: '4px',
+  py: 1,
+  px: 2.5,
   color: '#FFFFFF',
   '&:hover, &:focus': {
     bgcolor: 'rgba(255, 255, 255, 0.08)',
@@ -61,57 +59,57 @@ const item = {
 const itemCategory = {
   boxShadow: '0 -1px 0 rgb(255,255,255,0.1) inset',
   py: 1.5,
-  px: 3,
+  px: 2,
 };
-
 
 
 const Navigator = (props: any ) => {
   const { ...other } = props;
+  const [open, setOpen] = React.useState(true);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
+
 
   return (
-    <Drawer variant="permanent" {...other}>
-      <List disablePadding>
-        <ListItem sx={{ ...item , ...itemCategory, fontSize: 22, color: '#fff'}} >
-        <IconButton color="inherit" sx={{ p: 0.5, backgroundColor: '#FFC61A' }}>
+    <Drawer variant="permanent" {...other} >
+      <List disablePadding sx={{ bgcolor: '#1C1D22' }}>
+        <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff', bgcolor: '#1C1D22' }}>
+        <Tooltip title="Your profil">
+          <IconButton color="inherit" sx={{ p: 0.1 }}>
             <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar" sx={{backgroundColor: '#FFC61A'}}/>
-        </IconButton>
-        <ListIcon sx={{fontSize: 22, color: '#fff'}}/>
-        <MessageIcon sx={{fontSize: 22, color: '#fff'}}/>
+          </IconButton>
+        </Tooltip>
+        <FormatListBulleted sx={{color: '#fff', fontSize: 22, fontWeight: 500, ml: 16}}/>
+        <InsertCommentIcon sx={{color: '#fff', fontSize: 22, fontWeight: 500, ml: 2}}/>
+        </ListItem>
+        <ListItem sx={{ ...item, ...itemCategory }}>
+          <ListItemText>Your info</ListItemText>
         </ListItem>
         {categories.map(({ id, children }) => (
-          <Box key={id} sx={{ bgcolor: '#101F33'}}>
-            <ListItemButton sx={item} >
-              <ListItemButton sx={{color: '#fff'}}>
-                {children ? <KeyboardArrowDownIcon /> : null}
-              </ListItemButton>
-              <ListItemText primary={id} sx={{color: '#fff'}}/>
-            </ListItemButton>
-            {children ? (
-              <List disablePadding>
-                {children.map(({ id: childId, icon }) => (
-                  <ListItemButton key={childId} sx={{ ...item, pl: 4.5, color: '#fff' }}>
-                    <ListItemIcon sx={{color: '#fff'}}>
-                      {icon}
-                    </ListItemIcon>
-                    <ListItemText primary={childId} sx={{color: '#fff'}}/>
-                  </ListItemButton>
-                ))}
-              </List>
-            ) : null}
-            <Divider  sx={{ mt:2 }}/>
+          <Box key={id} sx={{ bgcolor: '#1C1D22' }}>
+            <ListItem sx={{ py: 2, px: 3 }}>
+              <ListItemText sx={{ color: '#fff' }}>
+                <Typography variant="subtitle1" fontWeight="bo" >
+                {id}
+                </Typography>
+                </ListItemText>
+              </ListItem>
+            {children.map(({ id: childId, icon }) => (
+              <ListItem disablePadding key={childId}>
+                <ListItemButton sx={item}>
+                  <ListItemText>{childId}</ListItemText>
+                  <ListItemIcon>{icon}</ListItemIcon>
+                </ListItemButton>
+              </ListItem>
+            ))}
+            <Divider sx={{ mt: 2, bg: '#1C1D22' }} />
           </Box>
         ))}
       </List>
-      <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}.
-    </Typography>
     </Drawer>
-
   )
 }
 
