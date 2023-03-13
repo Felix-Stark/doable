@@ -16,14 +16,31 @@ import { signOut, User } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { useNavigate } from "react-router";
 import { ThemeProvider } from "@emotion/react";
-import * as theme from "../Themes";
+
+// For Header MUI
+import PropTypes from 'prop-types';
+import Grid from '@mui/material/Grid';
+import HelpIcon from '@mui/icons-material/Help';
+import Link from '@mui/material/Link';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+
+
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Account", "Dashboard", "Logout"];
+const lightColor = "rgba(255, 255, 255, 0.7)";
+
+interface MenuBarProps {
+  onDrawerToggle: () => void;
+}
 
 
-
-function MenuBar() {
+export default function MenuBar(props: MenuBarProps) {
+  // Added by me
+  const { onDrawerToggle } = props;
   
+
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -44,13 +61,9 @@ function MenuBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = (setting: string) => {
-    if (setting == "Logout") {
+  const handle = (setting: string) => {
+    if (setting === "Logout") {
       handleSignOut();
-    } else if( setting == "Account") {
-      navigate('/user-settings')
-    } else if( setting == "Dashboard") {
-      navigate('/dashboard')
     }
     setAnchorElUser(null);
   };
@@ -63,132 +76,69 @@ function MenuBar() {
   };
 
   return (
-
-      <AppBar position="fixed">
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="/"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              doable
-            </Typography>
-
-            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+    <React.Fragment>
+      <AppBar color="primary" position="sticky" elevation={0}  sx={{backgroundColor: '#1C1D22'}}>
+          <Toolbar>
+          <Grid container spacing={1} alignItems="center">
+            <Grid sx={{ display: { sm: 'none', xs: 'block' } }} item>
               <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
                 color="inherit"
+                aria-label="open drawer"
+                onClick={onDrawerToggle}
+                edge="start"
               >
                 <MenuIcon />
               </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
+            </Grid>
+          <Grid item xs />
+          <Grid item >
+              <Typography color="inherit" variant="h5" component="h1">
+                Doable
+              </Typography>
+            </Grid>
+            <Grid item xs />
+            <Grid item>
+              <Link
+                href="/"
+                variant="body2"
                 sx={{
-                  display: { xs: "block", md: "none" },
+                  textDecoration: 'none',
+                  color: lightColor,
+                  '&:hover': {
+                    color: 'common.white',
+                  },
                 }}
+                rel="noopener noreferrer"
+                target="_blank"
+                onClick={ handleSignOut}
               >
-                {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-            <Typography
-              variant="h5"
-              noWrap
-              component="a"
-              href=""
-              sx={{
-                mr: 2,
-                display: { xs: "flex", md: "none" },
-                flexGrow: 1,
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              LOGO
-            </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {/* {page}  Bort kommenterar denna tillfälligt*/  }  
-                </Button>
-              ))}
-            </Box>
-
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src={photoURL} />
+                Log out
+              </Link>
+            </Grid>
+            <Grid item>
+              <Tooltip title="Show • Contact info">
+                <IconButton color="inherit">
+                  <Grid item>
+                    <IconButton color="inherit" sx={{ p: 0.5, backgroundColor: '#FFC61A' }}>
+                      <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar" sx={{backgroundColor: '#FFC61A'}}/>
+                    </IconButton>
+                  </Grid>
                 </IconButton>
               </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting}
-                    onClick={() => handleCloseUserMenu(setting)}
-                  >
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-          </Toolbar>
-        </Container>
+            </Grid>
+          </Grid>
+        </Toolbar>
+        
       </AppBar>
-
+      <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0,  backgroundColor: '#1C1D22'  }}>
+        <Tabs value={0} textColor="inherit">
+          <Tab label="Todos" />
+          <Tab label="Chat" />
+        </Tabs>
+      </AppBar>
+    </React.Fragment>
   );
 }
-export default MenuBar;
+
+
+

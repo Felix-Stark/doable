@@ -31,29 +31,13 @@ function App() {
 
   return (
     <ThemeProvider theme={ lightTheme }>
-      <Grid
-        container
-        flexDirection={"column"}
-        spacing={10}
-        margin={"0 auto"}
-        minWidth={"100vw"}
-        minHeight={"100vh"}
-        justifyContent={"center"}
-        alignItems={"center"}
-
-      >
-        
-
         <Router>
-          <NavBar />
           <Routes>
             <Route path="/" element={ <SignIn /> } />
             <Route path='/user-settings' element={ <UserConfig /> } /> 
             <Route path='/dashboard' element={ <Dashboard /> } />
           </Routes>
         </Router>
-
-      </Grid>
     </ThemeProvider>
 
   );

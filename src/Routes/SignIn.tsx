@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
 	browserLocalPersistence,
   createUserWithEmailAndPassword,
+  getAdditionalUserInfo,
   setPersistence,
   signInWithEmailAndPassword,
   updateProfile,
@@ -25,11 +26,17 @@ import { showLoader } from "../features/apiSlice";
 
 // Google sign in 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 
 export default function SignIn() {
-  
+  useEffect(() => {
+      auth.onAuthStateChanged((user) => {
+        if(user) {
+          navigate('/dashboard')
+        }
+      })
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [updateDarkmode, setUpdateDarkmode] = useState(false);
   const [disabled, setDisabled] = useState(true)
@@ -47,15 +54,20 @@ export default function SignIn() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const googleSignIn = () => {
-      const provider = new GoogleAuthProvider();
-      signInWithRedirect(auth, provider);
+    const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential?.accessToken;
+          const user = result.user;
+          getAdditionalUserInfo(result)
+        }).catch((error) => alert(error.message)); 
+
   };
 
-  useEffect(() => {
-      if (auth.currentUser) {
-        navigate("/dashboard");
-      }
-  });
+
+  
+  
 
   const handleEmailChange = (e: {
     target: { value: React.SetStateAction<string> };

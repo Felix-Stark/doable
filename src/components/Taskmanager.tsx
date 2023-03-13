@@ -10,7 +10,7 @@ import { uid } from 'uid'
 
 import { ThemeProvider } from "@emotion/react";
 import * as theme from "../Themes";
-import AddTodo from "../components/AddTodo";
+import AddTodo from "./AddTodo";
 
 import { currentUser, selectedList } from "../features/apiSlice";
 import { DoableUser, TodoList } from "../types";
