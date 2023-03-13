@@ -12,7 +12,7 @@ import { darkTheme, lightTheme } from './Themes';
 import NavBar from './components/NavBar';
 
 import Dashboard from './routes/Dashboard';
-import UserConfig from './routes/UserConfig';
+import UserConfig from './components/UserConfig';
 import { auth, db } from './firebase-config';
 
 import Grid from '@mui/system/Unstable_Grid/Grid';
@@ -49,7 +49,7 @@ function App() {
           <Routes>
             <Route path="/" element={ <SignIn /> } />
             <Route path='/user-settings' element={ <UserConfig /> } /> 
-            <Route path='/dashboard' element={ <Dashboard /> } /> 
+            <Route path='/dashboard' element={ <Dashboard /> } />
           </Routes>
         </Router>
 

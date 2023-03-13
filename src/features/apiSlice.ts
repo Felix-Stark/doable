@@ -4,7 +4,7 @@ import { DoableUser } from "../types";
 
 const initialState = {
   themeMode: true, //lightMode = true, darkMode = false
-  currentList: {}, // chosen list of todos to be displayed, get w
+  currentList: '', // chosen list of todos to be displayed, get w
   showTaskForm: false, //onClick newTask set true
   selectedTask: {}, // for update task
   toggleLoader: false,
@@ -24,9 +24,12 @@ export const apiSlice = createSlice({
     currentUser: (state, action: PayloadAction<DoableUser>) => {
       state.doUser = action.payload;
     },
+    selectedList: (state, action) => {
+      state.currentList = action.payload;
+    }
   },
 });
 
-export const { colorMode, showLoader, currentUser } = apiSlice.actions;
+export const { colorMode, showLoader, currentUser, selectedList } = apiSlice.actions;
 
 export default apiSlice.reducer;

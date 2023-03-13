@@ -14,6 +14,7 @@ import { collection, DocumentData, getDocs, onSnapshot, query, where, doc, getDo
 import { useDispatch } from 'react-redux'
 import { currentUser } from "../features/apiSlice";
 import { DoableUser } from "../types";
+import Taskmanager from "./Taskmanager";
 // import { onValue, ref, set } from "firebase/database"; // Realtime Database
 
 
@@ -60,39 +61,9 @@ const Dashboard = () => {
         minWidth={"100vw"}
 
       >
-        <Box
-          width={"100%"}
-          display={"flex"}
-          flexDirection={"column"}
-          alignItems={"center"}
-        >
-          <Typography component={"h1"} mt={10} maxHeight={"2em"}>
-          </Typography>
-        </Box>
-            <ChatComp />
+		  <Taskmanager /> 
+        
 
-        <Box
-          width={"100%"}
-          display={"flex"}
-          flexDirection={"column"}
-          alignItems={"center"}
-        >
-        <Typography component={"h2"} mt={10} maxHeight={"2em"}>
-          Tasks
-        </Typography>
-        </Box>
-
-        <Box
-          width={"80%"}
-          minHeight={"80vh"}
-          display={"flex"}
-          flexDirection={"column"}
-          alignItems={"center"}
-          position={"relative"}
-
-        >
-          <AddTodo />
-        </Box>
           <Box position={'absolute'} bottom={5} right={5} >
             <QuickTask />
           </Box>
