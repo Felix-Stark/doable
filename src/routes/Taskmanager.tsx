@@ -73,11 +73,12 @@ const Taskmanager = () => {
           id="select-list"
           label="Age"
           value={chosenList}
+		  onChange={ handleSelectList }
         >
           {todoLists
             ? todoLists.map((list) => {
                 return (
-                  <MenuItem onClick={() => setChosenList(list.title)} value={list.title} key={uid()}>
+                  <MenuItem value={list.title} key={uid()}>
                     {list.title}
                   </MenuItem>
                 );
