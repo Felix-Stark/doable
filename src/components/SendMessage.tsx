@@ -21,8 +21,8 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
 
     // Det kommer också skapa en ny dokument i collectionen med ett unikt id som är skapat av firebase. Dessa keys är unika för varje dokument och kan användas för att identifiera dokumenten och läsa eller skriva till dem.
 
-    const sendMessage = async (event: any) => { 
     const [user]: | any = useAuthState(auth);
+    const sendMessage = async (event: any) => { 
 
         event.preventDefault();
         if (message.trim() === '') {
