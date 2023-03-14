@@ -74,27 +74,27 @@ export default function MenuBar(props: MenuBarProps) {
     });
     navigate("/");
   };
-  return 'Hello'
+
   return (
     <React.Fragment>
       <AppBar color="primary" position="sticky" elevation={0}  sx={{backgroundColor: '#1C1D22'}}>
-          <Toolbar>
+        <Toolbar>
           <Grid container spacing={1} alignItems="center">
             <Grid sx={{ display: { sm: 'none', xs: 'block' } }} item>
               <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={onDrawerToggle}
-                edge="start"
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={onDrawerToggle}
+                  edge="start"
               >
                 <MenuIcon />
               </IconButton>
             </Grid>
           <Grid item xs />
           <Grid item >
-              <Typography color="inherit" variant="h5" component="h1">
+            <Typography color="inherit" variant="h5" component="h1">
                 Doable
-              </Typography>
+            </Typography>
             </Grid>
             <Grid item xs />
             <Grid item>
@@ -118,11 +118,7 @@ export default function MenuBar(props: MenuBarProps) {
             <Grid item>
               <Tooltip title="Show • Contact info">
                 <IconButton color="inherit">
-                  <Grid item>
-                    <IconButton color="inherit" sx={{ p: 0.5, backgroundColor: '#FFC61A' }}>
-                      <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar" sx={{backgroundColor: '#FFC61A'}}/>
-                    </IconButton>
-                  </Grid>
+                  <Avatar src="" alt="My Avatar" sx={{backgroundColor: '#FFC61A'}}/>
                 </IconButton>
               </Tooltip>
             </Grid>
