@@ -35,8 +35,8 @@ const itemCategory = {
 
 const Navigator = (props: any ) => {
   const { ...other } = props;
-  const [messagesOpen, setMessagesOpen] = React.useState(true);
-  const [contactsOpen, setContactsOpen] = React.useState(true);
+  const [messagesOpen, setMessagesOpen] = React.useState(false);
+  const [contactsOpen, setContactsOpen] = React.useState(false);
 
 
   const handleMessagesClicks = () => {

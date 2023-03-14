@@ -20,16 +20,16 @@ import ChatComp from './ChatComp';
 
 export default function Content() {
   return (
-    <Paper sx={{ maxWidth: 936, margin: 'auto', overflow: 'hidden' }}>
+    <Paper sx={{ position: 'relative', maxWidth: 936, margin: 'auto', overflow: 'hidden' , height: '80vh' }}>
       <AppBar
         position="static"
         color="default"
         elevation={0}
-        sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}
+        sx={{ height:'100vh', borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}
       >
+        <ChatComp />
       </AppBar>
 
-        <ChatComp />
 
     </Paper>
   );

@@ -56,5 +56,3 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
 };
 
 export default SendMessage; 
-
-
