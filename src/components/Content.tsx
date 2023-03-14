@@ -29,9 +29,9 @@ export default function Content() {
         sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}
       >
       </AppBar>
-      <Typography sx={{ my: 5, mx: 4 }} color="text.secondary" align="center">
+
         <Taskmanager />
-      </Typography>
+
     </Paper>
   );
 }

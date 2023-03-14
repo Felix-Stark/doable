@@ -74,7 +74,7 @@ export default function MenuBar(props: MenuBarProps) {
     });
     navigate("/");
   };
-
+  return 'Hello'
   return (
     <React.Fragment>
       <AppBar color="primary" position="sticky" elevation={0}  sx={{backgroundColor: '#1C1D22'}}>

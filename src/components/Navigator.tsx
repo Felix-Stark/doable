@@ -77,11 +77,9 @@ const Navigator = (props: any ) => {
     <Drawer variant="permanent" {...other} >
       <List disablePadding sx={{ bgcolor: '#1C1D22' }}>
         <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff', bgcolor: '#1C1D22' }}>
-        <Tooltip title="Your profil">
-          <IconButton color="inherit" sx={{ p: 0.1 }}>
-            <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar" sx={{backgroundColor: '#FFC61A'}}/>
-          </IconButton>
-        </Tooltip>
+          <Tooltip title="Your profil">
+            <Avatar src="" alt="My Avatar" sx={{backgroundColor: '#FFC61A'}}/>
+          </Tooltip>
         <FormatListBulleted sx={{color: '#fff', fontSize: 22, fontWeight: 500, ml: 16}}/>
         <InsertCommentIcon sx={{color: '#fff', fontSize: 22, fontWeight: 500, ml: 2}}/>
         </ListItem>

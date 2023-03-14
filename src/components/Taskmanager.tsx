@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { auth, db } from "../firebase-config";
 import { collection, DocumentData, getDocs, onSnapshot, query, where, doc, getDoc } from "firebase/firestore";
 
 import Grid from "@mui/material/Unstable_Grid2";
-import { Box, Button, Select, MenuItem, Stack, Typography, FormControl, SelectChangeEvent, InputLabel, Modal } from "@mui/material";
+import { Box, Button, Select, MenuItem, Stack, Typography, FormControl, SelectChangeEvent, InputLabel, Modal, TextField, ListItemButton } from "@mui/material";
 import { uid } from 'uid'
 
 import { ThemeProvider } from "@emotion/react";
@@ -47,9 +47,9 @@ const Taskmanager = () => {
 
 	
 
-	const handleSelectList = (e: SelectChangeEvent<string>) => {
-		dispatch(selectedList(e.target.value))
-		console.log('vald lista: ', e.target.value)
+	const handleSelectList = (e: SelectChangeEvent) => {
+    	setChosenList(e.target.value as string);
+		console.log('vald lista: ', chosenList)
 	};
 
 	
@@ -65,28 +65,24 @@ const Taskmanager = () => {
       minWidth={"100%"}
       margin={"0 auto"}
     >
-      <Box minWidth={'8rem'}>
-      <FormControl fullWidth>
-        <InputLabel id="select-list">Select list</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="select-list"
-          label="Age"
-          value={chosenList}
-		  onChange={ handleSelectList }
-        >
+      <Box minWidth={"8rem"}>
+        <FormControl sx={{ m: 1, minWidth: '8rem' }} style={{ color: '#000'}}>
+			<InputLabel id='select-list' >Select List</InputLabel>
+			<Select
+				labelId="select-list"
+				value={chosenList}
+				label="Select list"
+				onChange={ handleSelectList}
+			>
           {todoLists
             ? todoLists.map((list) => {
-                return (
-                  <MenuItem value={list.title} key={uid()}>
-                    {list.title}
-                  </MenuItem>
+              return (
+                <MenuItem value={ list.title } key={ uid() }> { list.title } </MenuItem>
                 );
               })
-            : ""}
-        </Select>
-      </FormControl>
-
+              : ""}
+          </Select>
+        </FormControl>
       </Box>
     </Grid>
   );
