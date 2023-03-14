@@ -31,9 +31,14 @@ const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Account", "Dashboard", "Logout"];
 const lightColor = "rgba(255, 255, 255, 0.7)";
 
+const drawerRightWidth = 256;
+
+
 interface MenuBarProps {
   onDrawerToggle: () => void;
 }
+
+
 
 
 export default function MenuBar(props: MenuBarProps) {

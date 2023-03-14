@@ -13,8 +13,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import AddTodo from './AddTodo';
 import AddList from './AddList';
 import Taskmanager from './Taskmanager';
-
-// Ska vi addera en ternary här som kopplas den till en state som är true/false? och som ändrar innehållet på Content chat eller todo?
+import ChatComp from './ChatComp';
 
 
 
@@ -30,7 +29,7 @@ export default function Content() {
       >
       </AppBar>
 
-        <Taskmanager />
+        <ChatComp />
 
     </Paper>
   );
