@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { auth, db } from '../firebase-config';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 
 interface SendMessageProps {
@@ -44,14 +47,24 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
 
 
   return (
-    <form onSubmit={(event) => sendMessage(event)} className="send-message-form"> 
-        <label htmlFor='messageInput' hidden>
-            Write message
-        </label>
-        <input type='text' id='messageInput' placeholder='Write message' value={message} onChange={(e) => setMessage (e.target.value)} /> 
-        {/* // onChange eventet sätter meddelandet till det som skrivs i input fältet */}
-        <button type='submit'>Send</button>
-    </form>
+      <Box component="form"  sx={{
+          '& .SendMessage-root': { m: 1, width: '25ch' },
+        }}
+        noValidate
+        autoComplete="off" onSubmit={(event) => sendMessage(event)}>
+            <TextField
+                id='outlined-multiline-static'
+                label='Write message'
+                multiline
+                maxRows={4}
+                value={message}
+                onChange={(e: any) => setMessage (e.target.value)}
+                />
+            <Box component="span" ref={scroll} >
+
+            <Button type='submit'>Send</Button>
+            </Box>
+    </Box>
   );
 };
 

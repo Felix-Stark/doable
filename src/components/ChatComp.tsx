@@ -36,7 +36,7 @@ const ChatComp = () => {
           // Är detta fel relaterat till att jag använder mig av en array med objekt? Eller till jag använder google auth?
           <Messages key={message.id} message={message} />  
         ))}
-        <span ref={scroll} ></span>
+        <Box component="span" ref={scroll} ></Box>
       </Box>
       <Box >
         <SendMessage scroll={scroll} />
