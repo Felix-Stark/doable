@@ -15,6 +15,9 @@ import Tooltip from '@mui/material/Tooltip';
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import CommentIcon from '@mui/icons-material/Comment';
 import InboxIcon from '@mui/icons-material/Inbox';
+import { useNavigate } from "react-router";
+import { signOut, User } from "firebase/auth";
+import { auth } from "../firebase-config";
 
 
 const item = {
@@ -37,6 +40,10 @@ const Navigator = (props: any ) => {
   const { ...other } = props;
   const [messagesOpen, setMessagesOpen] = React.useState(false);
   const [contactsOpen, setContactsOpen] = React.useState(false);
+  const [todosOpen, setTodosOpen] = React.useState(false);
+
+  const navigate = useNavigate();
+  const lightColor = "rgba(255, 255, 255, 0.7)";
 
 
   const handleMessagesClicks = () => {
@@ -47,6 +54,17 @@ const Navigator = (props: any ) => {
     setContactsOpen(!contactsOpen);
   };
 
+  const handleTodosClicks = () => {
+    setTodosOpen(!todosOpen);
+  };
+
+
+  const handleSignOut = () => {
+    signOut(auth).catch((err) => {
+      alert(err.message);
+    });
+    navigate("/");
+  };
 
   return (
     <Drawer variant="permanent" {...other} >
@@ -55,12 +73,39 @@ const Navigator = (props: any ) => {
           <Tooltip title="Your profil">
             <Avatar src="" alt="My Avatar" sx={{backgroundColor: '#FFC61A'}}/>
           </Tooltip>
+              <Link
+                href="/"
+                variant="body2"
+                sx={{
+                  textDecoration: 'none',
+                  color: lightColor,
+                  ml: 2,
+                  '&:hover': {
+                    color: 'common.white',
+                  },
+                }}
+                rel="noopener noreferrer"
+                target="_blank"
+                onClick={ handleSignOut}
+              >
+                Log out
+              </Link>
         </ListItem>
-
         <ListItem sx={{ ...item, ...itemCategory }}>
           <ListItemText>Your info</ListItemText>
         </ListItem>
           <Box sx={{ bgcolor: '#1C1D22' }}>
+            <ListItemButton onClick={ handleTodosClicks } sx={{ color: '#fff', py: 2, px: 3 }}>
+                <ListItemText primary="Todos" />
+                  {todosOpen ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={todosOpen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="Todos Cards" sx={{ color: '#fff'}}/>
+                  </ListItemButton>
+                </List>
+              </Collapse>
               <ListItemButton onClick={ handleMessagesClicks } sx={{ color: '#fff', py: 2, px: 3 }}>
                 <ListItemText primary="Messages" />
                   {messagesOpen ? <ExpandLess /> : <ExpandMore />}
