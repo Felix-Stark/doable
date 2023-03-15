@@ -16,6 +16,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import InboxIcon from '@mui/icons-material/Inbox';
 import Drawer from '@mui/material/Drawer';
 import { flexbox } from '@mui/system';
+import { Typography } from '@mui/material';
 
 type Anchor =  'top' | 'left' | 'bottom' | 'right';
 
@@ -41,10 +42,12 @@ export default function Content() {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List sx={{ flexbox: 'center' }}>
-      <Tooltip title="Your profil">
-            <Avatar src="" alt="My Avatar" sx={{backgroundColor: '#FFC61A', flexbox: 'center' }}/>
-          </Tooltip>
+      <List sx={{display: 'flex',flexDirection:'column', justifyContent: 'center', alignItems: 'center'}}>
+      <Tooltip title="Close"  >
+            <Avatar src="" alt="My Avatar" sx={{backgroundColor: '#FFC61A' ,width: 95, height: 95}}/>
+      </Tooltip>
+      <Typography variant="h6" sx={{color: '#fff', fontWeight: 'bold', fontSize: 20}}>Name</Typography>
+      
       </List>
       <Divider />
       <List>
