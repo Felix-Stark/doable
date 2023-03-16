@@ -15,10 +15,29 @@ import Divider from '@mui/material/Divider';
 import MailIcon from '@mui/icons-material/Mail';
 import InboxIcon from '@mui/icons-material/Inbox';
 import Drawer from '@mui/material/Drawer';
-import { flexbox } from '@mui/system';
-import { Typography } from '@mui/material';
+import { bgcolor, flexbox } from '@mui/system';
+import { Collapse, ListItemButton, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { ExpandLess, ExpandMore, Settings } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 
 type Anchor =  'top' | 'left' | 'bottom' | 'right';
+
+const item = {
+  py: 1,
+  px: 2.5,
+  color: '#FFFFFF',
+  '&:hover, &:focus': {
+    bgcolor: 'rgba(255, 255, 255, 0.08)',
+  },
+};
+
+const itemCategory = {
+  boxShadow: '0 -1px 0 rgb(255,255,255,0.1) inset',
+  py: 1.5,
+  px: 2,
+};
+
 
 
 
@@ -26,40 +45,59 @@ export default function Content() {
   const [state, setState] = React.useState({
     right: false,
   });
+  
+  const [tasksOpen, setTaskOpen] = React.useState(true);
 
-
-  const toggleDrawer = (anchor: Anchor, open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-    if ( event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
-      return;
-    }
-    setState({ ...state, [anchor]: open });
+  const handleTaskClicks = () => {
+    setTaskOpen(!tasksOpen);
   };
-
-  const list = (anchor: Anchor) => (
-    <Box
+  
+    
+    const toggleDrawer = (anchor: Anchor, open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if ( event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
+        return;
+      }
+      setState({ ...state, [anchor]: open });
+    };
+    
+    const list = (anchor: Anchor) => (
+      <Box
       sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
       role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <List sx={{display: 'flex',flexDirection:'column', justifyContent: 'center', alignItems: 'center'}}>
-      <Tooltip title="Close"  >
+      >
+      <List disablePadding sx={{ bgcolor: '#1C1D22', display: 'flex', flexDirection: 'row' }}>
+        <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff', bgcolor: '#1C1D22' }}>
+        <CloseIcon onClick={toggleDrawer(anchor, false)}
+                    onKeyDown={toggleDrawer(anchor, false)}/>
+        <Typography variant="h6" sx={{color: '#fff', fontWeight: 'semibold', fontSize: 16, paddingLeft: 2}}>Contact Info
+        </Typography>
+        </ListItem>
+      </List>
+      <List sx={{display: 'flex',flexDirection:'column', justifyContent: 'center', alignItems: 'center', paddingTop: 2}}>
             <Avatar src="" alt="My Avatar" sx={{backgroundColor: '#FFC61A' ,width: 95, height: 95}}/>
-      </Tooltip>
-      <Typography variant="h6" sx={{color: '#fff', fontWeight: 'bold', fontSize: 20}}>Name</Typography>
-      
+        <Typography variant="h6" sx={{color: '#fff', fontWeight: '300', fontSize: 16, paddingTop: 2}}>Name
+        </Typography>
+        <Typography variant="h6" sx={{color: 'grey', fontWeight: '300', fontSize: 16, paddingTop: .5 }}>+46 123 456 789
+        </Typography>
       </List>
       <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} sx={{ color: '#fff'}}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+      <Box sx={{ bgcolor: '#1C1D22' }}>
+            <ListItemButton onClick={ handleTaskClicks } sx={{ color: '#fff', py: 2, px: 3 }}>
+                <Settings sx={{ color: '#fff', fontSize: 25, paddingRight: 1 }}/>
+                <ListItemText primary="Taskmanager" />
+
+                  {tasksOpen ? <ExpandLess /> : <ExpandMore />}
+
+              </ListItemButton>
+              <Collapse in={tasksOpen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="Collaborated tasks" sx={{ color: '#fff'}}/>
+                    <AddIcon sx={{ color: '#fff', fontSize: 30, paddingRight: 1 }} />
+                  </ListItemButton>
+                </List>
+              </Collapse>
+          </Box>
     </Box>
   );
 
@@ -67,7 +105,13 @@ export default function Content() {
     <Paper variant="outlined" sx={{ position: 'relative', maxWidth: 936, margin: 'auto', overflow: 'hidden' , height: '100vh' }}>
       {(['right'] as const).map((anchor) => (
         <React.Fragment key={anchor}> 
-          <Grid item >
+                <AppBar
+                  position="static"
+                  color="default"
+                  elevation={0}
+                  sx={{ height:'100vh', borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}
+                >
+          <Grid item sx={{bgcolor: 'lightgrey'}} >
                 <Tooltip title="Show • Contacts info">
                   <IconButton color="inherit" onClick={toggleDrawer(anchor,true)}>
                     <Avatar src="" alt="Contacts Avatar" sx={{backgroundColor: '#FFC61A'}}/>
@@ -81,16 +125,10 @@ export default function Content() {
               {list(anchor)}
             </Drawer>
               </Grid>
+      <ChatComp />
+      </AppBar>
           </React.Fragment>
         ))}
-      <AppBar
-        position="static"
-        color="default"
-        elevation={0}
-        sx={{ height:'100vh', borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}
-      >
-        <ChatComp />
-      </AppBar>
     </Paper>
   );
 

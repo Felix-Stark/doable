@@ -23,7 +23,6 @@ import { BlurOn } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { showLoader } from "../features/apiSlice";
 
-
 // Google sign in 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -128,17 +127,27 @@ export default function SignIn() {
     }
 
   return (
-    <Grid
-      container
-      flexDirection={"column"}
-      spacing={10}
-      margin={"0 auto"}
-      minWidth={"100vw"}
-      minHeight={"100vh"}
-      justifyContent={"center"}
-      alignItems={"center"}
-      zIndex={2000}
+    
+    <Box 
+      component="form"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "10em",
+        height: "100vh",
+        width: "100vw",
+      }}
+      zIndex={"2"}
     >
+      <CardMedia
+    component="img"
+    image={backdrop}
+    alt="backdrop"
+    sx={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1 }}
+  />
+      <Grid  textAlign={"center"}  bgcolor={ "white"} borderRadius={"10px"} padding={"2em"} >
       <h1>doable</h1>
       <Grid flexDirection={"column"} alignItems={"center"} spacing={"5"}>
         {isRegistering ? (
@@ -276,5 +285,6 @@ export default function SignIn() {
         )}
       </Grid>
     </Grid>
+    </Box>
   );
 }

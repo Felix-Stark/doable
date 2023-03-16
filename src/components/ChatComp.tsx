@@ -30,7 +30,7 @@ const ChatComp = () => {
   }, []);
 
   return (
-    <Box >
+    <Box sx={{ maxHeighth: '75vh', overflow: 'hidden'}}>
       <Box >
         {messages?.map((message) => (
           // Är detta fel relaterat till att jag använder mig av en array med objekt? Eller till jag använder google auth?
