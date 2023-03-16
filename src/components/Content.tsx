@@ -85,9 +85,7 @@ export default function Content() {
             <ListItemButton onClick={ handleTaskClicks } sx={{ color: '#fff', py: 2, px: 3 }}>
                 <Settings sx={{ color: '#fff', fontSize: 25, paddingRight: 1 }}/>
                 <ListItemText primary="Taskmanager" />
-
                   {tasksOpen ? <ExpandLess /> : <ExpandMore />}
-
               </ListItemButton>
               <Collapse in={tasksOpen} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>

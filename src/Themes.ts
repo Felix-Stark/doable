@@ -41,10 +41,10 @@ export const lightTheme: ThemeOptions = createTheme({
       main: "#FFC61A",
     },
     secondary: {
-      main: "#9c27b0",
+      main: "#FFC61A",
     },
     success: {
-      main: "#00ffe1",
+      main: "#FFC61A",
     },
     background: {
       default: "#ffffff",
