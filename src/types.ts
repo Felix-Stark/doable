@@ -18,10 +18,12 @@ export type Task = {
 }
 
 export type Todo = {
-	title: string;
+	id: string;
+	task: string;
 	in_list: string; //listTitle
 	is_done: boolean;
 	timestamp: string;
+	created_by: string;
 }
 
 export type TodoList = {

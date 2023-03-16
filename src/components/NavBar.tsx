@@ -25,6 +25,9 @@ import Link from '@mui/material/Link';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import { useDispatch, useSelector } from "react-redux";
+import { toggleChat, toggleTaskmanager, switchView } from "../features/apiSlice";
+import { RootState } from "../store";
 
 
 const pages = ["Products", "Pricing", "Blog"];
@@ -74,6 +77,9 @@ export default function MenuBar(props: MenuBarProps) {
     });
     navigate("/");
   };
+  
+
+  const dispatch = useDispatch(); 
 
   return (
     <React.Fragment>
@@ -128,8 +134,8 @@ export default function MenuBar(props: MenuBarProps) {
       </AppBar>
       <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0,  backgroundColor: '#1C1D22'  }}>
         <Tabs value={0} textColor="inherit">
-          <Tab label="Todos" />
-          <Tab label="Chat" />
+          <Tab label="Todos" onClick={() => dispatch(switchView(true))} />
+          <Tab label="Chat" onClick={() => dispatch(switchView(false)) } />
         </Tabs>
       </AppBar>
     </React.Fragment>

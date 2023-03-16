@@ -210,7 +210,7 @@ const Dashboard = () => {
 				navigate('/')
 			}
 		})
-	})
+	}, [])
 
   return (
     <ThemeProvider theme={theme}>
