@@ -41,9 +41,8 @@ const Taskmanager = () => {
 	
 
 	const handleSelectList = (e: SelectChangeEvent) => {
-		
-    	dispatch(selectedList(e.target.value))
 		setChosenList(e.target.value as string)
+    	dispatch(selectedList(e.target.value))
 		setOpenListForm(false)
 	};
 

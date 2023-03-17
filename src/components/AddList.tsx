@@ -25,19 +25,24 @@ const AddList: React.FC<AddListProps> = ({ closeListForm, setChosenList }) => {
 	const [newList, setNewList] = useState({
 		title: "",
 		participants: [user.email],
-		timestamp: dayjs().format(),
+		timestamp: '',
 	});
 
 
-	const handleCreateList = () => {
+	const handleCreateList = async () => {
 		const colaborators = [...newList.participants]
 		colaborators.push(colaborator)
-		setNewList({
+		const saveList = {
 			...newList,
 			participants: colaborators,
-		})
-		addDoc(collection(db, "todolists"), newList);
-		
+			timestamp: dayjs().format(),
+		}
+		// setNewList({
+		// 	...newList,
+		// 	participants: colaborators,
+		// })
+		await addDoc(collection(db, "todolists"), saveList);
+		dispatch(selectedList(saveList.title))
 		closeListForm(false)
 
 	};

@@ -58,7 +58,6 @@ const ShowList = () => {
 
 
 	useEffect(() => {
-		if( currentTodos.length < 1) {
 
 				onSnapshot(
 					query(collection(db, "todos"), where('listRef', '==', user.email+currentList), orderBy('timestamp')),
@@ -72,7 +71,7 @@ const ShowList = () => {
 				}
 			);
 			  
-		}
+
 	}, [])
 	
 	console.log(currentList)
