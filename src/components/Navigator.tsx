@@ -71,7 +71,7 @@ const Navigator = (props: any ) => {
       <List disablePadding sx={{ bgcolor: '#1C1D22' }}>
         <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff', bgcolor: '#1C1D22' }}>
           <Tooltip title="Your profil">
-            <Avatar src="" alt="My Avatar" sx={{backgroundColor: '#FFC61A'}}/>
+            <Avatar src="" alt="My Avatar" sx={{backgroundColor: '#FFC61A', width: 45, height: 45}}/>
           </Tooltip>
               <Link
                 href="/"

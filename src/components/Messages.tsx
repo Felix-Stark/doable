@@ -1,6 +1,7 @@
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase-config';
 import { styled } from '@mui/material/styles';
+import { Typography } from '@mui/material';
 
 interface MessageProps {
   message: {
@@ -47,10 +48,10 @@ const Message = ({ message }: MessageProps) => {
 
   return (
     <ChatBubble alignRight={message.uid === user?.uid}>
-      <ChatBubbleLeft src={message.avatar} alt="avatar" />
+      <ChatBubbleLeft sx={{width: "1.5em", height: "1.5em"}} src={message.avatar} alt="avatar" />
       <ChatBubbleRight alignRight={message.uid === user?.uid}>
-        <p className="user-name">{message.name}</p>
-        <p className="message-text">{message.text}</p>
+        <Typography >{message.text}</Typography>
+        {/* <Typography >{message.name}</Typography> */}
       </ChatBubbleRight>
     </ChatBubble>
   );

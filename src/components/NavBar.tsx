@@ -6,54 +6,33 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
-import { signOut, User } from "firebase/auth";
-import { auth } from "../firebase-config";
 import { useNavigate } from "react-router";
-import { ThemeProvider } from "@emotion/react";
 
 // For Header MUI
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { useDispatch, useSelector } from "react-redux";
 import { toggleChat, toggleTaskmanager, switchView } from "../features/apiSlice";
-import { RootState } from "../store";
 
 
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Account", "Dashboard", "Logout"];
 
-
-const drawerRightWidth = 256;
-
-
-interface MenuBarProps {
+interface NavBarProps {
   onDrawerToggle: () => void;
 }
 
 
-
-
-export default function MenuBar(props: MenuBarProps) {
-  // Added by me
+export default function MenuBar(props: NavBarProps) {
   const { onDrawerToggle } = props;
   
 
-  const navigate = useNavigate();
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [photoURL, setPhotoURL] = React.useState("");
+  // const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+  //   null
+  // );
+  // const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+  //   null
+  // );
+  // const [photoURL, setPhotoURL] = React.useState("");
 
   // const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
   //   setAnchorElNav(event.currentTarget);
@@ -62,17 +41,17 @@ export default function MenuBar(props: MenuBarProps) {
   //   setAnchorElUser(event.currentTarget);
   // };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+  // const handleCloseNavMenu = () => {
+  //   setAnchorElNav(null);
+  // };
 
 
-  const handleSignOut = () => {
-    signOut(auth).catch((err) => {
-      alert(err.message);
-    });
-    navigate("/");
-  };
+  // const handleSignOut = () => {
+  //   signOut(auth).catch((err) => {
+  //     alert(err.message);
+  //   });
+  //   navigate("/");
+  // };
   
 
   const dispatch = useDispatch(); 
@@ -102,7 +81,6 @@ export default function MenuBar(props: MenuBarProps) {
             <Grid item xs />
           </Grid>
         </Toolbar>
-        
       </AppBar>
       <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0,  backgroundColor: '#1C1D22'  }}>
         <Tabs value={0} textColor="inherit">

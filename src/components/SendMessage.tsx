@@ -5,7 +5,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-
+import SendIcon from '@mui/icons-material/Send';
 
 interface SendMessageProps {
     scroll: React.RefObject<HTMLSpanElement>;
@@ -59,11 +59,14 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
                 maxRows={4}
                 value={message}
                 onChange={(e: any) => setMessage (e.target.value)}
+                onKeyDown={(e:any) => {
+                    if (e.keyCode === 13) {
+                        sendMessage(e);
+                    }
+                }}
                 />
-            <Box component="span" ref={scroll} >
-
-            <Button type='submit'>Send</Button>
-            </Box>
+            <Box component="span" ref={scroll} />
+            <Button variant="contained" endIcon={<SendIcon/>}type='submit' />
     </Box>
   );
 };
