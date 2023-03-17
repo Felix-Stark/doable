@@ -19,7 +19,7 @@ export default function Content() {
     <Paper sx={{ maxWidth: '100vw', minHeight: '100vh', margin: 'auto', overflow: 'hidden' }}>
         { toggleView ? 
         <Taskmanager /> :
-        <ChatComp /> 
+        <ChatComp  /> 
         }
   </Paper>
 )}
