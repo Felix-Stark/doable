@@ -153,4 +153,6 @@ export default function Content() {
     </Paper>
   );
 
-}
+  </Paper>
+
+)}
