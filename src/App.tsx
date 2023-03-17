@@ -10,7 +10,6 @@ import SignIn from './Routes/SignIn';
 import { ThemeProvider } from '@mui/material/styles'
 import { darkTheme, lightTheme } from './Themes';
 import NavBar from './components/NavBar';
-
 import Dashboard from './Routes/Dashboard';
 import UserConfig from './components/UserConfig';
 import { auth, db } from './firebase-config';

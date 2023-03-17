@@ -5,21 +5,7 @@ import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import HomeIcon from '@mui/icons-material/Home';
-import PeopleIcon from '@mui/icons-material/People';
-import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined';
-import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet';
-import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputComponent';
-import TimerIcon from '@mui/icons-material/Timer';
-import SettingsIcon from '@mui/icons-material/Settings';
-import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
-import ListIcon from '@mui/icons-material/List';
-import MessageIcon from '@mui/icons-material/Message';
-import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
@@ -27,25 +13,12 @@ import { ExpandLess, ExpandMore, FormatListBulleted, StarBorder } from '@mui/ico
 import Collapse from '@mui/material/Collapse';
 import Tooltip from '@mui/material/Tooltip';
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
+import CommentIcon from '@mui/icons-material/Comment';
+import InboxIcon from '@mui/icons-material/Inbox';
+import { useNavigate } from "react-router";
+import { signOut, User } from "firebase/auth";
+import { auth } from "../firebase-config";
 
-const categories = [
-  {
-    id: 'Messages',
-    children: [
-      { id: 'Inbox', icon: <HomeIcon />},
-      { id: 'Starred', icon: <PeopleIcon /> },
-      { id: 'Add message', icon: <DnsRoundedIcon /> },
-    ],
-  },
-  {
-    id: 'Contacts',
-    children: [
-      { id: 'Add contacts', icon: <PermMediaOutlinedIcon /> },
-      { id: 'Groups', icon: <SettingsEthernetIcon /> },
-      { id: 'Settings', icon: <TimerIcon /> },
-    ],
-  },
-];
 
 const item = {
   py: 1,
@@ -65,13 +38,33 @@ const itemCategory = {
 
 const Navigator = (props: any ) => {
   const { ...other } = props;
-  const [open, setOpen] = React.useState(true);
+  const [messagesOpen, setMessagesOpen] = React.useState(false);
+  const [contactsOpen, setContactsOpen] = React.useState(false);
+  const [todosOpen, setTodosOpen] = React.useState(false);
 
-  const handleClick = () => {
-    setOpen(!open);
+  const navigate = useNavigate();
+  const lightColor = "rgba(255, 255, 255, 0.7)";
+
+
+  const handleMessagesClicks = () => {
+    setMessagesOpen(!messagesOpen);
+  };
+
+  const handleContactsClicks = () => {
+    setContactsOpen(!contactsOpen);
+  };
+
+  const handleTodosClicks = () => {
+    setTodosOpen(!todosOpen);
   };
 
 
+  const handleSignOut = () => {
+    signOut(auth).catch((err) => {
+      alert(err.message);
+    });
+    navigate("/");
+  };
 
   return (
     <Drawer variant="permanent" {...other} >
@@ -80,32 +73,63 @@ const Navigator = (props: any ) => {
           <Tooltip title="Your profil">
             <Avatar src="" alt="My Avatar" sx={{backgroundColor: '#FFC61A'}}/>
           </Tooltip>
-        <FormatListBulleted sx={{color: '#fff', fontSize: 22, fontWeight: 500, ml: 16}}/>
-        <InsertCommentIcon sx={{color: '#fff', fontSize: 22, fontWeight: 500, ml: 2}}/>
+              <Link
+                href="/"
+                variant="body2"
+                sx={{
+                  textDecoration: 'none',
+                  color: lightColor,
+                  ml: 2,
+                  '&:hover': {
+                    color: 'common.white',
+                  },
+                }}
+                rel="noopener noreferrer"
+                target="_blank"
+                onClick={ handleSignOut}
+              >
+                Log out
+              </Link>
         </ListItem>
         <ListItem sx={{ ...item, ...itemCategory }}>
           <ListItemText>Your info</ListItemText>
         </ListItem>
-        {categories.map(({ id, children }) => (
-          <Box key={id} sx={{ bgcolor: '#1C1D22' }}>
-            <ListItem sx={{ py: 2, px: 3 }}>
-              <ListItemText sx={{ color: '#fff' }}>
-                <Typography variant="subtitle1" fontWeight="bo" >
-                {id}
-                </Typography>
-                </ListItemText>
-              </ListItem>
-            {children.map(({ id: childId, icon }) => (
-              <ListItem disablePadding key={childId}>
-                <ListItemButton sx={item}>
-                  <ListItemText>{childId}</ListItemText>
-                  <ListItemIcon>{icon}</ListItemIcon>
-                </ListItemButton>
-              </ListItem>
-            ))}
+          <Box sx={{ bgcolor: '#1C1D22' }}>
+            <ListItemButton onClick={ handleTodosClicks } sx={{ color: '#fff', py: 2, px: 3 }}>
+                <ListItemText primary="Todos" />
+                  {todosOpen ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={todosOpen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="Todos Cards" sx={{ color: '#fff'}}/>
+                  </ListItemButton>
+                </List>
+              </Collapse>
+              <ListItemButton onClick={ handleMessagesClicks } sx={{ color: '#fff', py: 2, px: 3 }}>
+                <ListItemText primary="Messages" />
+                  {messagesOpen ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={messagesOpen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="Messages Cards" sx={{ color: '#fff'}}/>
+                  </ListItemButton>
+                </List>
+              </Collapse>
             <Divider sx={{ mt: 2, bg: '#1C1D22' }} />
+            <ListItemButton onClick={ handleContactsClicks } sx={{ color: '#fff', py: 2, px: 3 }}>
+                <ListItemText primary="Contacts" />
+                  {contactsOpen ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={contactsOpen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="Contact Cards" sx={{ color: '#fff'}}/>
+                  </ListItemButton>
+                </List>
+              </Collapse>
           </Box>
-        ))}
       </List>
     </Drawer>
   )

@@ -9,7 +9,7 @@ import {
   User,
 } from "firebase/auth";
 import { auth, db } from "../firebase-config";
-import { collection, doc, setDoc, getDocs, where, query } from "firebase/firestore";
+import { collection, doc, setDoc, getDoc, getDocs, where, query } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router";
@@ -23,7 +23,6 @@ import { BlurOn } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { showLoader } from "../features/apiSlice";
 
-
 // Google sign in 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -36,7 +35,7 @@ export default function SignIn() {
           navigate('/dashboard')
         }
       })
-  });
+  }, []);
   const [isLoading, setIsLoading] = useState(true);
   const [updateDarkmode, setUpdateDarkmode] = useState(false);
   const [disabled, setDisabled] = useState(true)
@@ -53,21 +52,30 @@ export default function SignIn() {
   
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const googleSignIn = () => {
-    const provider = new GoogleAuthProvider();
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          const credential = GoogleAuthProvider.credentialFromResult(result);
-          const token = credential?.accessToken;
-          const user = result.user;
-          getAdditionalUserInfo(result)
-        }).catch((error) => alert(error.message)); 
 
+  const googleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    const googleUser = await signInWithPopup(auth, provider);
+
+    userCheck(googleUser.user)
   };
 
-
-  
-  
+  const userCheck = async (user: User) => {
+    const userEmail = user.email as string
+    const userExist = await getDoc(doc(db, 'users', userEmail))
+    if( userExist.exists()) {
+      navigate('/dashboard')
+    } else {
+        await setDoc(doc(db, 'users', userEmail as string), {
+          username: user.displayName as string,
+          email: userEmail,
+          avatar_url: user.photoURL,
+          darkMode: false,
+        })
+        navigate('/dashboard')
+      }
+    
+  }
 
   const handleEmailChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -84,28 +92,28 @@ export default function SignIn() {
   const handleSignIn = () => {
 	  setPersistence(auth, browserLocalPersistence)
 		.then(() => {
+      navigate("/dashboard");
 		  
 		  return signInWithEmailAndPassword(auth, email, password);
 		})
       .catch((err) => alert(err.message));
-        navigate("/dashboard");
 
   };
 
   const handleRegister = async () => {
     if (registerInfo.password !== registerInfo.confirmPassword) {
+      navigate('/user-settings')
       alert("Please confirm that password are correct");
       return;
     }
     
-    const credentials = await createUserWithEmailAndPassword(
+    const credentials =  createUserWithEmailAndPassword(
       auth,
       registerInfo.email,
       registerInfo.password
     );
 
 
-	navigate('/user-settings')
 	  
   };
 
@@ -116,7 +124,7 @@ export default function SignIn() {
       setTimeout( async () => {
         const usernameRef = query(collection(db, 'users'), where('username', '==', registerInfo.username));
         const usernameExist = await getDocs(usernameRef);
-        if ( usernameExist.empty == false ) {
+        if ( !usernameExist.empty ) {
           setWarning(true)
           setDisabled(true)
         }
@@ -128,17 +136,27 @@ export default function SignIn() {
     }
 
   return (
-    <Grid
-      container
-      flexDirection={"column"}
-      spacing={10}
-      margin={"0 auto"}
-      minWidth={"100vw"}
-      minHeight={"100vh"}
-      justifyContent={"center"}
-      alignItems={"center"}
-      zIndex={2000}
+    
+    <Box 
+      component="form"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "10em",
+        height: "100vh",
+        width: "100vw",
+      }}
+      zIndex={"2"}
     >
+      <CardMedia
+    component="img"
+    image={backdrop}
+    alt="backdrop"
+    sx={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1 }}
+  />
+      <Grid  textAlign={"center"}  bgcolor={ "white"} borderRadius={"10px"} padding={"2em"} >
       <h1>doable</h1>
       <Grid flexDirection={"column"} alignItems={"center"} spacing={"5"}>
         {isRegistering ? (
@@ -151,10 +169,11 @@ export default function SignIn() {
                 justifyContent: "space-evenly",
                 alignItems: "center",
                 minHeight: "10em",
+
               }}
               zIndex={"2"}
             >
-              <TextField
+              <TextField sx={{paddingBottom: "1em"}}
                 label="Pick a username"
                 error={warning}
                 variant="outlined"
@@ -170,7 +189,7 @@ export default function SignIn() {
 
                 }
               />
-              <TextField
+              <TextField sx={{paddingBottom: "1em"}}
                 label="Email"
                 variant="outlined"
                 type="email"
@@ -180,7 +199,7 @@ export default function SignIn() {
                   setRegisterInfo({ ...registerInfo, email: e.target.value })
                 }
               />
-              <TextField
+              <TextField sx={{paddingBottom: "1em"}}
                 label="Password"
                 variant="outlined"
                 type="password"
@@ -192,7 +211,7 @@ export default function SignIn() {
                   })
                 }
               />
-              <TextField
+              <TextField sx={{paddingBottom: "1em"}}
                 label="Confirm password"
                 variant="outlined"
                 type="password"
@@ -246,6 +265,7 @@ export default function SignIn() {
                 type="email"
                 onChange={handleEmailChange}
                 value={email}
+                
               />
               <TextField
                 label="Password"
@@ -276,5 +296,6 @@ export default function SignIn() {
         )}
       </Grid>
     </Grid>
+    </Box>
   );
 }

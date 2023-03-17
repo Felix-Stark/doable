@@ -1,32 +1,59 @@
-import { uid } from 'uid';
-import { auth, db } from '../firebase-config';
 import { useAuthState } from 'react-firebase-hooks/auth';
-// import { Message } from '../types';
-// import { User } from '@firebase/auth';
-// import { useState } from 'react';
+import { auth } from '../firebase-config';
+import { styled } from '@mui/material/styles';
 
+interface MessageProps {
+  message: {
+    uid: string;
+    avatar: string;
+    name: string;
+    text: string;
+    createdAt: {
+      toDate: () => Date;
+    };
+  };
+}
 
+interface ChatBubbleProps {
+  alignRight: boolean;
+}
 
+const ChatBubble = styled('div')<ChatBubbleProps>(({ theme, alignRight }) => ({
+  display: 'flex',
+  flexDirection: alignRight ? 'row-reverse' : 'row',
+  alignItems: 'flex-end',
+  marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(2),
+}));
 
+const ChatBubbleLeft = styled('img')(({ theme }) => ({
+  width: '50px',
+  height: '50px',
+  marginRight: theme.spacing(1),
+  borderRadius: '50%',
+}));
 
-const Message = ({ message }: any) => {
-    const [user]: | any = useAuthState(auth);
+const ChatBubbleRight = styled('div')<ChatBubbleProps>(({ theme, alignRight }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  backgroundColor: alignRight ? '#E6F7FF' : '#F0F2F5',
+  padding: theme.spacing(1),
+  borderRadius: '10px',
+  maxWidth: '60%',
+}));
+
+const Message = ({ message }: MessageProps) => {
+  const [user] = useAuthState(auth);
 
   return (
-        <div className={`chat-bubble ${message.uid === user.id as String ? "right" : "" }`}>
-            <img className='chat-bubble_left'
-            src= {message.avatar}
-            alt="avatar"
-        />
-            <div className="chat-bubble_right"> 
-                {/* <p className="user-name">{message.messageId}</p> */}
-                <p className="message-text">{message.name}</p>
-                <p className="message-time">{message.text}</p>
-            </div>
-        </div>
-    );
+    <ChatBubble alignRight={message.uid === user?.uid}>
+      <ChatBubbleLeft src={message.avatar} alt="avatar" />
+      <ChatBubbleRight alignRight={message.uid === user?.uid}>
+        <p className="user-name">{message.name}</p>
+        <p className="message-text">{message.text}</p>
+      </ChatBubbleRight>
+    </ChatBubble>
+  );
 };
 
 export default Message;
-
-

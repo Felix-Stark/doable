@@ -6,6 +6,10 @@ import SendMessage from "./SendMessage";
 import Messages from "./Messages";
 import { Message } from "../types";
 import { Box } from '@mui/system';
+import Grid from "@mui/material/Grid";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import Avatar from "@mui/material/Avatar";
 
 
 const ChatComp = () => {
@@ -27,11 +31,12 @@ const ChatComp = () => {
 
   return (
     <Box >
-      <Box >
+      <Box sx={{ maxWidth: '75vh', overflow: 'hidden'}}>
         {messages?.map((message) => (
-          <Messages key={message.id} message={message} />
+          // Är detta fel relaterat till att jag använder mig av en array med objekt? Eller till jag använder google auth?
+          <Messages key={message.id} message={message} />  
         ))}
-        <span ref={scroll} ></span>
+        <Box component="span" ref={scroll} ></Box>
       </Box>
       <Box >
         <SendMessage scroll={scroll} />

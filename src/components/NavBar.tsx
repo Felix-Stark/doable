@@ -18,11 +18,8 @@ import { useNavigate } from "react-router";
 import { ThemeProvider } from "@emotion/react";
 
 // For Header MUI
-import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
-import HelpIcon from '@mui/icons-material/Help';
 import Link from '@mui/material/Link';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { useDispatch, useSelector } from "react-redux";
@@ -32,11 +29,16 @@ import { RootState } from "../store";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Account", "Dashboard", "Logout"];
-const lightColor = "rgba(255, 255, 255, 0.7)";
+
+
+const drawerRightWidth = 256;
+
 
 interface MenuBarProps {
   onDrawerToggle: () => void;
 }
+
+
 
 
 export default function MenuBar(props: MenuBarProps) {
@@ -53,23 +55,17 @@ export default function MenuBar(props: MenuBarProps) {
   );
   const [photoURL, setPhotoURL] = React.useState("");
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
+  // const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorElNav(event.currentTarget);
+  // };
+  // const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorElUser(event.currentTarget);
+  // };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  const handle = (setting: string) => {
-    if (setting === "Logout") {
-      handleSignOut();
-    }
-    setAnchorElUser(null);
-  };
 
   const handleSignOut = () => {
     signOut(auth).catch((err) => {
@@ -81,6 +77,7 @@ export default function MenuBar(props: MenuBarProps) {
 
   const dispatch = useDispatch(); 
 
+  
   return (
     <React.Fragment>
       <AppBar color="primary" position="sticky" elevation={0}  sx={{backgroundColor: '#1C1D22'}}>
@@ -103,31 +100,6 @@ export default function MenuBar(props: MenuBarProps) {
             </Typography>
             </Grid>
             <Grid item xs />
-            <Grid item>
-              <Link
-                href="/"
-                variant="body2"
-                sx={{
-                  textDecoration: 'none',
-                  color: lightColor,
-                  '&:hover': {
-                    color: 'common.white',
-                  },
-                }}
-                rel="noopener noreferrer"
-                target="_blank"
-                onClick={ handleSignOut}
-              >
-                Log out
-              </Link>
-            </Grid>
-            <Grid item>
-              <Tooltip title="Show • Contact info">
-                <IconButton color="inherit">
-                  <Avatar src="" alt="My Avatar" sx={{backgroundColor: '#FFC61A'}}/>
-                </IconButton>
-              </Tooltip>
-            </Grid>
           </Grid>
         </Toolbar>
         

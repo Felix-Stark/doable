@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { auth, db } from "../firebase-config";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, onSnapshot, query, where, collection } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router";
@@ -16,6 +16,7 @@ import { RootState } from '../store';
 import { User } from 'firebase/auth';
 
 const UserConfig = () => {
+  
 	const doUser = useSelector((state: RootState) => state.api.doUser)
 	const user = auth.currentUser as User;
 	const [newUser, setNewUser] = useState(false)
@@ -27,24 +28,30 @@ const UserConfig = () => {
 		darkMode: updateDarkmode,
 	});
 	const [isUpdating, setIsUpdating] = useState(false)
-	
+	useEffect(() => {
+		// async () => {
+		// 	const userRef = doc(db, 'users', user.email as string);
+		// 	const userSnap = await getDoc(userRef);
+		// 	if( userSnap.exists()) {
+		// 		dispatch(currentUser(userSnap.data() as DoableUser))
+		// 	} else {
+		// 		setNewUser(true)
+		// 		setIsUpdating(true)
+		// 	}
+		// 	console.log(doUser)	
+		// }
+    const userQuery = query(collection(db, 'users'), where('email', '==', user.email as string))
+    onSnapshot(userQuery, (snapshot) => {
+      if(snapshot.empty == true) {
+        setNewUser(true)
+      }
+    })
+  	}, [])
 	
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	
-  	useEffect(() => {
-		async () => {
-			const userRef = doc(db, 'users', user.email as string);
-			const userSnap = await getDoc(userRef);
-			if( userSnap.exists()) {
-				dispatch(currentUser(userSnap.data() as DoableUser))
-			} else {
-				setNewUser(true)
-				setIsUpdating(true)
-			}
-			console.log(doUser)	
-		}
-  	})
+  	
 
 	const handleUpdateInfo = async () => {
 		if (user) {
@@ -68,12 +75,16 @@ const UserConfig = () => {
 	
 
   return (
-    <>
+    <Grid
+      sx={{ minHeight: '' }}
+      display={'flex'}
+
+    >
       <h2>Configure your profile</h2>
       <Button onClick={handleIsUpdating}>Change</Button>
       {isUpdating ? (
         <Box
-          component="form"
+
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -108,13 +119,13 @@ const UserConfig = () => {
           <FormControl>
             <FormLabel id='toggle-darkmode'>Darkmode</FormLabel>
             <RadioGroup
-				aria-labelledby='toggle-darkmode'
-				name='set-darkmode'
-				onChange={handleRadioChange}
-			>
-				<FormControlLabel value={'on'} control={ <Radio />} label={'ON'} />
-				<FormControlLabel value={'off'} control={ <Radio />} label={'OFF'} />
-			</RadioGroup>
+              aria-labelledby='toggle-darkmode'
+              name='set-darkmode'
+              onChange={handleRadioChange}
+            >
+              <FormControlLabel value={'on'} control={ <Radio />} label={'ON'} />
+              <FormControlLabel value={'off'} control={ <Radio />} label={'OFF'} />
+            </RadioGroup>
           </FormControl>
           <Button onClick={handleUpdateInfo}>Save changes</Button>
         </Box>
@@ -140,7 +151,7 @@ const UserConfig = () => {
           </Stack>
         </Box>
       )}
-    </>
+    </Grid>
   );
 }
 
