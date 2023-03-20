@@ -2,8 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import { collection, query, orderBy, onSnapshot, limit, where } from "firebase/firestore";
 import { db, auth } from "../firebase-config";
 import SendMessage from "./SendMessage";
-import Messages from "./Messages";
-import { Message } from "../types";
+// import Messages from "./Messages";
 import { Box, flexbox } from '@mui/system';
 import Grid from "@mui/material/Grid";
 import Tooltip from "@mui/material/Tooltip";
@@ -23,6 +22,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import CloseIcon from '@mui/icons-material/Close';
 import Drawer from "@mui/material/Drawer";
+import { Message } from "../types";
+import { styled } from '@mui/material/styles';
+import { useAuthState } from 'react-firebase-hooks/auth';
+
 
 
 // Lägger in Ikonen så den enbart syns i Chat flik 
@@ -46,14 +49,21 @@ const itemCategory = {
 
 
 const ChatComp = () => {
-  
-
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [tasksOpen, setTaskOpen] = React.useState(true);
+  const user = useSelector((state: RootState) => state.api.doUser)
   const [state, setState] = React.useState({
     right: false,
   });
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [tasksOpen, setTaskOpen] = React.useState(true);
 
+  useEffect(() => {
+    const conversation = query(collection(db, "messages"), where('senderId', '==', user.email), orderBy("timestamp"), limit(50));
+    onSnapshot(conversation, (snapshot) => {
+      setMessages(snapshot.docs.map(doc => doc.data()) as unknown as Message[])
+      
+    })
+  }, []);
+  
   const scroll = useRef<HTMLSpanElement>(null);
 
   const handleTaskClicks = () => {
@@ -69,18 +79,7 @@ const ChatComp = () => {
     };
 
     
-    useEffect(() => {
-      const conversation = query(collection(db, "messages"), orderBy("createdAt"), limit(50));
-  
-      const unsubscribe = onSnapshot(conversation, (QuerySnapShot) => {
-        let messages: any = [];
-        QuerySnapShot.forEach((doc) => {
-          messages.push({ ...doc.data(), id: doc.id });
-        });
-        setMessages(messages);
-      });
-      return unsubscribe;
-    }, []);
+    
     
     const list = (anchor: Anchor) => (
       <Box
@@ -121,11 +120,38 @@ const ChatComp = () => {
     </Box>
   );
 
+  interface ChatBubbleProps {
+    alignRight: boolean;
+  }
+  
+  const ChatBubble = styled('div')<ChatBubbleProps>(({ theme, alignRight }) => ({
+    display: 'flex',
+    flexDirection: alignRight ? 'row-reverse' : 'row',
+    alignItems: 'flex-end',
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  }));
+  
+  const Avatar = styled('img')(({ theme }) => ({
+    width: '50px',
+    height: '50px',
+    marginRight: theme.spacing(1),
+    borderRadius: '50%',
+  }));
+  
+  const ChatBubbleRight = styled('div')<ChatBubbleProps>(({ theme, alignRight }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: alignRight ? '#E6F7FF' : '#F0F2F5',
+    padding: theme.spacing(1),
+    borderRadius: '10px',
+    maxWidth: '60%',
+  }));
+
 
 
   return (
     <>
-      <Box sx={{ height: '100vh' }}>
       {(['right'] as const).map((anchor) => (
         <React.Fragment key={anchor}> 
           <Grid item sx={{bgcolor: '#26272D'}} >
@@ -144,9 +170,24 @@ const ChatComp = () => {
           </Grid>
           </React.Fragment>
         ))}
-        {messages?.map((message) => (
-          <Messages key={message.id} message={message} />  
-        ))}
+      <Box sx={{ height: '100vh' }}>
+        {/* {messages?.map((messages) => {
+          return (<Messages key={messages.timestamp} messageId={messages.content} senderId={""} recipientId={""} content={""} timestamp={""} avatar_url={""} recevied={false} read={false}   />  )
+        })} */}
+        { messages? messages.map((message) => {
+          return (
+            <ChatBubble key={message.timestamp} alignRight={message.senderId === user.email}>
+              <Avatar sx={{width: "1.5em", height: "1.5em"}} src={user.avatar_url} alt="avatar" />
+              <ChatBubbleRight alignRight={message.senderId === user.email}>
+                <Typography >{message.content}</Typography>
+              </ChatBubbleRight>
+              <Typography >{message.timestamp}</Typography>
+            </ChatBubble>
+            
+            )
+          })
+
+        : ''}
       </Box>
       <Box component="span" ref={scroll} ></Box>
       <Box sx={{ display: 'flex',flexDirection:'column', justifyContent: 'center', alignItems: 'center'}} >

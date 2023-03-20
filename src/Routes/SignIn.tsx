@@ -92,7 +92,7 @@ export default function SignIn() {
   const handleSignIn = () => {
 	  setPersistence(auth, browserLocalPersistence)
 		.then(() => {
-      navigate("/dashboard");
+      navigate("/");
 		  
 		  return signInWithEmailAndPassword(auth, email, password);
 		})
