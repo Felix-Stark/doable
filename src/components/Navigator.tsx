@@ -85,7 +85,6 @@ const Navigator = (props: any ) => {
                   },
                 }}
                 rel="noopener noreferrer"
-                target="_blank"
                 onClick={ handleSignOut}
               >
                 Log out
