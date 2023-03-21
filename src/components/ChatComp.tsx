@@ -95,7 +95,7 @@ const ChatComp = () => {
         </ListItem>
       </List>
       <List sx={{display: 'flex',flexDirection:'column', justifyContent: 'center', alignItems: 'center', paddingTop: 2}}>
-            <Avatar src="" alt="My Avatar" sx={{backgroundColor: '#FFC61A' ,width: 95, height: 95}}/>
+            <Avatar src="" alt="" sx={{backgroundColor: '#FFC61A' ,width: 95, height: 95}}/>
         <Typography variant="h6" sx={{color: '#fff', fontWeight: '300', fontSize: 16, paddingTop: 2}}>Name
         </Typography>
         <Typography variant="h6" sx={{color: 'grey', fontWeight: '300', fontSize: 16, paddingTop: .5 }}>+46 123 456 789
@@ -157,7 +157,7 @@ const ChatComp = () => {
           <Grid item sx={{bgcolor: '#26272D'}} >
               <Tooltip title="Show • Contacts info">
                 <IconButton color="inherit" onClick={toggleDrawer(anchor,true)}>
-                  <Avatar src="" alt="Contacts Avatar" sx={{backgroundColor: '#FFC61A'}}/>
+                  <Avatar src="" alt="" sx={{backgroundColor: '#FFC61A'}}/>
                 </IconButton>
               </Tooltip>
               <Drawer
@@ -181,7 +181,7 @@ const ChatComp = () => {
               <ChatBubbleRight alignRight={message.senderId === user.email}>
                 <Typography >{message.content}</Typography>
               </ChatBubbleRight>
-              <Typography >{message.timestamp}</Typography>
+              {/* <Typography >{message.timestamp}</Typography> */}
             </ChatBubble>
             
             )

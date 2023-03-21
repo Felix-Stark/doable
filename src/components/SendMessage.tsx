@@ -69,7 +69,7 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
 
   return (
       <Box component="form"  sx={{
-          '& .SendMessage-root': { m: 1, width: '25ch' },
+          '& .SendMessage-root': { m: 1, width: '25ch', borderRadius: 0, backgroundColor: '#1C1D22', color: '#fff' },
         }}
         noValidate
         autoComplete="off" onSubmit={(event) => sendMessage(event)}>
@@ -90,7 +90,7 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
                 }}
                 />
             <Box component="span" ref={scroll} />
-            <Button variant="contained" endIcon={<SendIcon/>} type='submit' />
+            <Button variant="contained" sx={{width: '', borderRadius: '0',backgroundColor: '#1C1D22', color: '#fff'}} endIcon={<SendIcon/>} type='submit' />
     </Box>
   );
 };
