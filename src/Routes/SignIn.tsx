@@ -77,9 +77,9 @@ export default function SignIn() {
     
   }
 
-  const handleEmailChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
+
+
+  const handleEmailChange = (e: { target: { value: React.SetStateAction<string> }; }) => {
     setEmail(e.target.value);
   };
   const handlePasswordChange = (e: {
@@ -102,16 +102,16 @@ export default function SignIn() {
 
   const handleRegister = async () => {
     if (registerInfo.password !== registerInfo.confirmPassword) {
-      navigate('/user-settings')
       alert("Please confirm that password are correct");
       return;
+    } else {
+      createUserWithEmailAndPassword(
+        auth,
+        registerInfo.email,
+        registerInfo.password
+      );
+      
     }
-    
-    const credentials =  createUserWithEmailAndPassword(
-      auth,
-      registerInfo.email,
-      registerInfo.password
-    );
 
 
 	  
@@ -121,24 +121,25 @@ export default function SignIn() {
     
     // timeout 1.5s för att inte hämta för varje key
     console.log(registerInfo.username)
-      setTimeout( async () => {
-        const usernameRef = query(collection(db, 'users'), where('username', '==', registerInfo.username));
-        const usernameExist = await getDocs(usernameRef);
-        if ( !usernameExist.empty ) {
-          setWarning(true)
-          setDisabled(true)
-        }
-        if ( usernameExist.empty == true ) {
-          setWarning(false)
-          setDisabled(false)
-        }
-    }, 2000)
+
+      const usernameRef = query(collection(db, 'users'), where('username', '==', registerInfo.username));
+      const usernameExists = await getDocs(usernameRef);
+      if ( !usernameExists.empty ) {
+        setWarning(true);
+        setDisabled(true);
+      } else {
+        setWarning(false);
+        setDisabled(false);
+        handleRegister();
+      }
+
     }
+
+    
 
   return (
     
-    <Box 
-      component="form"
+    <Box
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -158,7 +159,6 @@ export default function SignIn() {
   />
       <Grid  textAlign={"center"}  bgcolor={ "white"} borderRadius={"10px"} padding={"2em"} >
       <h1>doable</h1>
-      <Grid flexDirection={"column"} alignItems={"center"} spacing={"5"}>
         {isRegistering ? (
           <>
             <Box
@@ -184,10 +184,10 @@ export default function SignIn() {
                   ...registerInfo,
                 username: e.target.value
                 })
-                checkUsername()
-                }
 
-                }
+                }}
+
+                
               />
               <TextField sx={{paddingBottom: "1em"}}
                 label="Email"
@@ -196,7 +196,10 @@ export default function SignIn() {
                 color="secondary"
                 value={registerInfo.email}
                 onChange={(e) =>
-                  setRegisterInfo({ ...registerInfo, email: e.target.value })
+                  setRegisterInfo({
+                    ...registerInfo,
+                    email: e.target.value
+                  })
                 }
               />
               <TextField sx={{paddingBottom: "1em"}}
@@ -223,27 +226,27 @@ export default function SignIn() {
                   })
                 }
               />
+				<Stack
+				direction={"column"}
+				justifyContent={"space-evenly"}
+				textAlign={"center"}
+				spacing={1}
+				>
+				<Button
+					disabled={disabled}
+					variant="contained"
+					onClick={checkUsername}
+				>
+					Register
+				</Button>
+				<Button
+					variant="outlined"
+					onClick={() => setIsRegistering(false)}
+				>
+					Go back
+				</Button>
+				</Stack>
             </Box>
-            <Stack
-              direction={"column"}
-              justifyContent={"space-evenly"}
-              textAlign={"center"}
-              spacing={1}
-            >
-              <Button
-                disabled={disabled}
-                variant="contained"
-                onClick={handleRegister}
-              >
-                Register
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => setIsRegistering(false)}
-              >
-                Go back
-              </Button>
-            </Stack>
           </>
         ) : (
           <>
@@ -295,7 +298,6 @@ export default function SignIn() {
           </>
         )}
       </Grid>
-    </Grid>
     </Box>
   );
 }

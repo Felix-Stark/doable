@@ -31,9 +31,8 @@ const Taskmanager = () => {
 	useEffect(() => {
 		if( auth.currentUser ) {
 			const listQuery = query(collection(db, 'todolists'), where('participants', 'array-contains', user?.email as string))
-			onSnapshot(listQuery, (snapshot) => {
-			setTodoLists(snapshot.docs.map(doc => doc.data()) as unknown as TodoList[])
-		})
+			getDocs(listQuery)
+		
 		}
 		
 	}, [])

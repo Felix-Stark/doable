@@ -72,7 +72,7 @@ const ShowList = () => {
 			);
 			  
 
-	}, [])
+	}, [currentList])
 	
 	console.log(currentList)
 
@@ -94,7 +94,7 @@ const ShowList = () => {
       <List
         sx={{ minWidth: "20rem", border: "2px solid #000", borderRadius: 1 }}
       >
-        {currentTodos
+        {currentTodos.length
           ? currentTodos.map((todo) => {
               return (
                 <ListItemButton
@@ -120,7 +120,9 @@ const ShowList = () => {
               );
             })
           : ""}
-		<AddTodo />
+		{currentTodos.length > 1 ?
+      <AddTodo />
+      : ""}
       </List>
 	  
     </Box>
