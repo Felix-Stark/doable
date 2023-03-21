@@ -92,7 +92,7 @@ export default function SignIn() {
   const handleSignIn = () => {
 	  setPersistence(auth, browserLocalPersistence)
 		.then(() => {
-      navigate("/dashboard");
+      navigate("/");
 		  
 		  return signInWithEmailAndPassword(auth, email, password);
 		})
@@ -107,6 +107,8 @@ export default function SignIn() {
       return;
     }
     
+
+    // Not using ?? 
     const credentials =  createUserWithEmailAndPassword(
       auth,
       registerInfo.email,
@@ -119,7 +121,7 @@ export default function SignIn() {
 
   const checkUsername = async () => {
     
-    // timeout 1.5s för att inte hämta för varje key
+    // timeout 2s för att inte hämta för varje key
     console.log(registerInfo.username)
       setTimeout( async () => {
         const usernameRef = query(collection(db, 'users'), where('username', '==', registerInfo.username));
@@ -150,7 +152,7 @@ export default function SignIn() {
       }}
       zIndex={"2"}
     >
-      <CardMedia
+    <CardMedia
     component="img"
     image={backdrop}
     alt="backdrop"
