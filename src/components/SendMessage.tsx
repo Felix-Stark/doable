@@ -31,6 +31,7 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
         read: false,
 
     }); 
+    
     // Skapar en state för meddelandet som sätts till en tom sträng
 
     // Skapar en sendMessage funktion som körs när användaren klickar på button Submit

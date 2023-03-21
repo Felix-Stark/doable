@@ -29,22 +29,22 @@ const Taskmanager = () => {
 	const [todoLists, setTodoLists] = useState<TodoList[]>([]);
 
 	useEffect(() => {
-		if( auth.currentUser ) {
-			const listQuery = query(collection(db, 'todolists'), where('participants', 'array-contains', user?.email as string))
+    if( auth.currentUser ) {
+      const listQuery = query(collection(db, 'todolists'), where('participants', 'array-contains', user?.email as string))
 			onSnapshot(listQuery, (snapshot) => {
-			setTodoLists(snapshot.docs.map(doc => doc.data()) as unknown as TodoList[])
-		})
+        setTodoLists(snapshot.docs.map(doc => doc.data()) as unknown as TodoList[])
+      })
 		}
 		
 	}, [])
-
+  
 	
+  const handleSelectList = (e: SelectChangeEvent) => {
+    setChosenList(e.target.value as string)
+      dispatch(selectedList(e.target.value))
+    setOpenListForm(false)
+  };
 
-	const handleSelectList = (e: SelectChangeEvent) => {
-		setChosenList(e.target.value as string)
-    	dispatch(selectedList(e.target.value))
-		setOpenListForm(false)
-	};
 
 
   return (
