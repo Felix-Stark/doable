@@ -72,10 +72,12 @@ const Navigator = (props: any ) => {
   // Get contacts from firestore
 
   const fetchContacts = async () => {
-    const contactsRef = query(collection(db, "users"));
+    const contactsRef = query(collection(db, "users"), where("email", "==", searchContact ));
     const contactsSnapshot = await getDocs(contactsRef);
     
   };
+
+  // contactsSnapshot.map().doc
 
   const handleSearchChange = (e) => {
     setSearchContact(e.target.value);
