@@ -77,27 +77,21 @@ const Navigator = (props: any ) => {
     
   };
 
-  // contactsSnapshot.map().doc
-
-  const handleSearchChange = (e) => {
+  
+  const handleSearchChange = (e: any) => {
     setSearchContact(e.target.value);
   }
-  // const handleContactsClicks = () => {
-  //   setContactsOpen(!contactsOpen);
-  //   if (!contactsOpen) {
-  //     fetchContacts();
-  //   }
-  // };
-
-
-
+  
+  
+  
+  
   const handleSignOut = async ()  => {
     await signOut (auth).catch((err) => {
       alert(err.message);
     });
     navigate("/");
   };
-
+  
   return (
     <Drawer variant="permanent" {...other} >
       <List disablePadding sx={{ bgcolor: '#1C1D22' }}>
@@ -111,14 +105,14 @@ const Navigator = (props: any ) => {
                 sx={{
                   textDecoration: 'none',
                   color: lightColor,
-                  ml: 2,
+                  ml: 15,
                   '&:hover': {
                     color: 'common.white',
                   },
                 }}
                 rel="noopener noreferrer"
                 onClick={ handleSignOut}
-              >
+                >
                 Log out
               </Link>
         </ListItem>
@@ -158,11 +152,11 @@ const Navigator = (props: any ) => {
               <Collapse in={contactsOpen} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                   {contacts.map((contact: any) => (
-                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemButton sx={{ pl: 4 }}>
                     <ListItemText primary="Contact Cards" sx={{ color: '#fff'}}/>
                   </ListItemButton>
                     
-                  ))}
+                    ))}
                 </List>
               </Collapse>
           </Box>
@@ -170,5 +164,7 @@ const Navigator = (props: any ) => {
     </Drawer>
   )
 }
+// contactsSnapshot.map().doc
+
 
 export default Navigator

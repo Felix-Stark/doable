@@ -132,17 +132,17 @@ const ChatComp = () => {
     marginBottom: theme.spacing(2),
   }));
   
-  const Avatar = styled('img')(({ theme }) => ({
-    width: '50px',
-    height: '50px',
-    marginRight: theme.spacing(1),
-    borderRadius: '50%',
-  }));
+  // const Avatar = styled('img')(({ theme }) => ({
+  //   width: '50px',
+  //   height: '50px',
+  //   marginRight: theme.spacing(1),
+  //   borderRadius: '50%',
+  // }));
   
   const ChatBubbleRight = styled('div')<ChatBubbleProps>(({ theme, alignRight }) => ({
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: alignRight ? '#E6F7FF' : '#F0F2F5',
+    backgroundColor: alignRight ? '#BDD2B6' : '#3A3A3A',
     padding: theme.spacing(1),
     borderRadius: '10px',
     maxWidth: '60%',
@@ -190,8 +190,9 @@ const ChatComp = () => {
         : ''}
       </Box>
       <Box component="span" ref={scroll} ></Box>
-      <Box sx={{ display: 'flex',flexDirection:'column', justifyContent: 'center', alignItems: 'center'}} >
-        <SendMessage scroll={scroll} />
+      <Box sx={{ display: 'flex',  justifyContent: 'center', alignItems: 'center', backgroundColor: 
+    '#1C1D22' }} >
+        <SendMessage scroll={scroll}  />
       </Box>
   </>
   );

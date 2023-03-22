@@ -70,13 +70,14 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
 
   return (
       <Box component="form"  sx={{
-          '& .SendMessage-root': { m: 1, width: '25ch', borderRadius: 0, backgroundColor: '#1C1D22', color: '#fff' },
+          '& .SendMessage-root': { m: 1, width: '25ch', borderRadius: '0', height:'5em', },
         }}
         noValidate
         autoComplete="off" onSubmit={(event) => sendMessage(event)}>
-            <TextField
-                id='outlined-multiline-static'
+            <TextField sx={{borderRadius: '0', width: '15em', backgroundColor: '#fff'}}
+                id='filled-basic'
                 label='Write message'
+                variant='filled'
                 multiline
                 maxRows={4}
                 value={message.content}
@@ -90,8 +91,8 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
                     }
                 }}
                 />
+            <Button variant="contained" sx={{borderRadius: '0',backgroundColor: '#1C1D22', color: '#fff', width:'2em'}} endIcon={<SendIcon sx={{height: '2.2em', width:'2em'}} />} type='submit' />
             <Box component="span" ref={scroll} />
-            <Button variant="contained" sx={{width: '', borderRadius: '0',backgroundColor: '#1C1D22', color: '#fff'}} endIcon={<SendIcon/>} type='submit' />
     </Box>
   );
 };
