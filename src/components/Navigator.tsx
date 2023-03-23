@@ -145,12 +145,12 @@ const Navigator = (props: any ) => {
                 </List>
               </Collapse>
             <Divider sx={{ mt: 2, bg: '#1C1D22' }} />
-            <TextField sx={{ color: '#fff', bgcolor: '#fff', mt: 2, mb: 2, ml: 2, mr: 2 }} id="outlined-basic" label="Search contact" variant="outlined" value={searchContact} onChange={(e) => handleSearchChange(e)} />
             <ListItemButton onClick={ handleContactsClicks } sx={{ color: '#fff', py: 2, px: 3 }}>
                 <ListItemText primary="Contacts" />
                   {contactsOpen ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
               <Collapse in={contactsOpen} timeout="auto" unmountOnExit>
+              <TextField sx={{ color: '#fff', bgcolor: '#fff', mt: 2, mb: 2, ml: 2, mr: 2 }} id="outlined-basic" label="Search contact" variant="outlined" value={searchContact} onChange={(e) => handleSearchChange(e)} />
                 <List component="div" disablePadding>
                   {contacts.map((contact: any) => (
                     <ListItemButton sx={{ pl: 4 }}>
