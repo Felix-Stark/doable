@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { useDispatch, useSelector } from "react-redux";
-import { toggleChat, toggleTaskmanager, switchView } from "../features/apiSlice";
+import { toggleChat, toggleTaskmanager } from "../features/apiSlice";
 
 
 
@@ -68,8 +68,14 @@ export default function MenuBar(props: NavBarProps) {
       </AppBar>
       <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0,  backgroundColor: '#1C1D22'  }}>
         <Tabs value={value} onChange={handleChange} textColor="inherit" indicatorColor="secondary" >
-          <Tab value={0} label="Todos" onClick={() => dispatch(switchView(true))} />
-          <Tab value={1}  label="Chat" onClick={() => dispatch(switchView(false)) } />
+          <Tab value={0} label="Todos" onClick={() => {
+            dispatch(toggleTaskmanager(true));
+            dispatch(toggleChat(false));
+          }} />
+          <Tab value={1}  label="Chat" onClick={() => {
+            dispatch(toggleChat(true));
+            dispatch(toggleTaskmanager(false));
+          }} />
         </Tabs>
       </AppBar>
     </React.Fragment>

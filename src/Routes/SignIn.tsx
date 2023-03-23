@@ -21,7 +21,7 @@ import backdrop from '../assets/backdrop.png'
 import { DoableUser } from "../types";
 import { BlurOn } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
-import { showLoader } from "../features/apiSlice";
+import { currentUser, showLoader } from "../features/apiSlice";
 
 // Google sign in 
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -77,8 +77,6 @@ export default function SignIn() {
     
   }
 
-
-
   const handleEmailChange = (e: { target: { value: React.SetStateAction<string> }; }) => {
     setEmail(e.target.value);
   };
@@ -89,51 +87,44 @@ export default function SignIn() {
   };
 
 
-  const handleSignIn = () => {
-	  setPersistence(auth, browserLocalPersistence)
+  const handleSignIn = async () => {
+	  await setPersistence(auth, browserLocalPersistence)
 		.then(() => {
-      navigate("/");
-		  
 		  return signInWithEmailAndPassword(auth, email, password);
 		})
-      .catch((err) => alert(err.message));
-
+    .catch((err) => alert(err.message));
+    getDoc(doc(db, 'users', email))
+    .then((user) => {
+      dispatch(currentUser(user.data() as unknown as DoableUser))
+    })
   };
 
   const handleRegister = async () => {
-    if (registerInfo.password !== registerInfo.confirmPassword) {
+    if ( registerInfo.password !== registerInfo.confirmPassword) {
       alert("Please confirm that password are correct");
-      return;
     } else {
-      createUserWithEmailAndPassword(
-        auth,
-        registerInfo.email,
-        registerInfo.password
-      );
-      
-    }
+      const usernameRef = query(collection(db, "users"), where("username", "==", registerInfo.username));
+      const uniqeUsername = (await getDocs(usernameRef)).empty;
 
-
-	  
-  };
-
-  const checkUsername = async () => {
-    
-    // timeout 2s för att inte hämta för varje key
-    console.log(registerInfo.username)
-
-      const usernameRef = query(collection(db, 'users'), where('username', '==', registerInfo.username));
-      const usernameExists = await getDocs(usernameRef);
-      if ( !usernameExists.empty ) {
-        setWarning(true);
-        setDisabled(true);
-      } else {
-        setWarning(false);
-        setDisabled(false);
-        handleRegister();
+      if (uniqeUsername) {
+        setDoc(doc(db, "users", registerInfo.email), {
+            username: registerInfo.username,
+            email: registerInfo.email,
+            avatar_url: '',
+            darkMode: false,
+        }).then(async() => {
+          const user = await getDoc(doc(db, 'users', registerInfo.email));
+          dispatch(currentUser(user.data() as unknown as DoableUser))
+        }).then(() => {
+          createUserWithEmailAndPassword(
+            auth,
+            registerInfo.email,
+            registerInfo.password
+          )
+        })
       }
-
     }
+  };
 
     
 
@@ -233,9 +224,9 @@ export default function SignIn() {
 				spacing={1}
 				>
 				<Button
-					disabled={disabled}
+					disabled={false}
 					variant="contained"
-					onClick={checkUsername}
+					onClick={handleRegister}
 				>
 					Register
 				</Button>

@@ -1,5 +1,4 @@
 export type DoableUser = {
-	doUserId: string;
 	username: string;
 	email: string;
 	avatar_url: string;
@@ -27,9 +26,9 @@ export type Todo = {
 }
 
 export type TodoList = {
+	id: string;
 	title: string;
-	collaborator: string;
-	created_by: string;
+	participants: string;
 	timestamp: string;
 }
 

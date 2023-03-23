@@ -90,8 +90,9 @@ const Navigator = (props: any ) => {
   const handleSignOut = async ()  => {
     await signOut (auth).catch((err) => {
       alert(err.message);
-    });
-    navigate("/");
+    }).then(() => {
+      navigate("/");
+    })
   };
   
   return (

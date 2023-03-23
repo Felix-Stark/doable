@@ -14,6 +14,7 @@ import { Grid,TextField } from "@mui/material";
 import { uid } from "uid";
 import { auth, db } from "../firebase-config";
 import { addDoc, collection, doc, DocumentData, getDoc, getDocs, query, QuerySnapshot, setDoc, SnapshotOptions, where, serverTimestamp, onSnapshot } from 'firebase/firestore'
+import { useCollectionData } from "react-firebase-hooks/firestore";
 import { Task } from "@mui/icons-material";
 import { Todo, TodoList } from "../types";
 import { User } from "firebase/auth";
@@ -36,16 +37,16 @@ const AddTodo = () => {
     	created_by: user.email,
 		is_done: false,
 		timestamp: ''
-	})
+	});
 	
+
+
 	const handleCreateTodo = async () => {
 		const saveTodo = {
 			...newTodo,
 			id: uid(),
 			timestamp: dayjs().format(),
 		};
-		
-
 		await setDoc(doc(db, "todos", saveTodo.id), saveTodo)
 		setNewTodo({
 			id: "",
@@ -70,7 +71,7 @@ const AddTodo = () => {
         variant={"standard"}
         color={"secondary"}
         value={newTodo.task}
-
+		autoFocus={ true }
         onChange={(e) =>
           setNewTodo({
             ...newTodo,

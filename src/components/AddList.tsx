@@ -37,46 +37,47 @@ const AddList: React.FC<AddListProps> = ({ closeListForm, setChosenList }) => {
 			participants: colaborators,
 			timestamp: dayjs().format(),
 		}
-		// setNewList({
-		// 	...newList,
-		// 	participants: colaborators,
-		// })
-		await addDoc(collection(db, "todolists"), saveList);
-		dispatch(selectedList(saveList.title))
+		await setDoc(doc(db, "todolists", user.email+saveList.title), saveList).then(() => {
+			dispatch(selectedList(saveList.title))
+		})
 		closeListForm(false)
 
 	};
 	
 
   return (
-	<>
-    <Box display={"flex"} flexDirection={"column"}>
-      <h3>List title</h3>
-      <TextField
-        label={"List title"}
-        type={"text"}
-        variant={"standard"}
-        sx={{ color: "#333" }}
-        onChange={(e) =>
-			setNewList({
-				...newList,
-				title: e.target.value,
-			})
-        }
-		/>
-      <TextField
-        label={"Share with"}
-        type={"text"}
-        helperText={"Email of your contact"}
-        variant={"standard"}
-        color={"secondary"}
-        onChange={(e) => setColaborator(e.target.value)}
-		/>
-      <Button variant="contained" onClick={handleCreateList}>
-        Create list
-      </Button>
-    </Box>
-	</>
+    <>
+      <Box display={"flex"} flexDirection={"column"}>
+        <h3>List title</h3>
+        <TextField
+          label={"List title"}
+          type={"text"}
+          variant={"standard"}
+          sx={{ color: "#333" }}
+          onChange={(e) =>
+            setNewList({
+              ...newList,
+              title: e.target.value,
+            })
+          }
+        />
+        <TextField
+          label={"Share with"}
+          type={"text"}
+          helperText={"Email of your contact"}
+          variant={"standard"}
+          color={"secondary"}
+          onChange={(e) => setColaborator(e.target.value)}
+        />
+        <Button
+          variant="contained"
+          sx={{ bgColor: "#63ccff" }}
+          onClick={handleCreateList}
+        >
+          Create list
+        </Button>
+      </Box>
+    </>
   );
 }
 

@@ -8,7 +8,8 @@ import ChatComp from './ChatComp';
 
 
 export default function Content() {
-  const toggleView = useSelector((state: RootState) => state.api.toggleView)
+  const showTaskmanager = useSelector((state: RootState) => state.api.showTaskmanager);
+  const showChat = useSelector((state: RootState) => state.api.showChat);
   const [state, setState] = React.useState({
     right: false,
   });
@@ -17,9 +18,9 @@ export default function Content() {
    
   return (
     <Paper sx={{ maxWidth: '100vw', minHeight: '100vh', margin: 'auto', overflow: 'hidden' }}>
-        { toggleView ? 
-        <Taskmanager /> :
-        <ChatComp  /> 
-        }
+        { showTaskmanager ? 
+        <Taskmanager /> : ''
+      }
+      { showChat ? <ChatComp /> : '' }
   </Paper>
 )}
