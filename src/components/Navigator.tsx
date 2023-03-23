@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -18,6 +18,13 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import { useNavigate } from "react-router";
 import { signOut, User } from "firebase/auth";
 import { auth } from "../firebase-config";
+
+// To get contacts
+import { collection, getDocs , doc , where , query} from "firebase/firestore";
+import { db } from "../firebase-config";
+import { TextField } from '@mui/material';
+
+
 
 
 const item = {
@@ -41,6 +48,8 @@ const Navigator = (props: any ) => {
   const [messagesOpen, setMessagesOpen] = React.useState(false);
   const [contactsOpen, setContactsOpen] = React.useState(false);
   const [todosOpen, setTodosOpen] = React.useState(false);
+  const [contacts, setContacts] = React.useState([]);
+  const [searchContact, setSearchContact] = React.useState('');
 
   const navigate = useNavigate();
   const lightColor = "rgba(255, 255, 255, 0.7)";
@@ -50,22 +59,41 @@ const Navigator = (props: any ) => {
     setMessagesOpen(!messagesOpen);
   };
 
+  // Get contacts from firestore
   const handleContactsClicks = () => {
     setContactsOpen(!contactsOpen);
+    if(!contactsOpen) {
+      fetchContacts();
+    }
   };
 
   const handleTodosClicks = () => {
     setTodosOpen(!todosOpen);
   };
 
+  // Get contacts from firestore
 
-  const handleSignOut = () => {
-    signOut(auth).catch((err) => {
+  const fetchContacts = async () => {
+    const contactsRef = query(collection(db, "users"), where("email", "==", searchContact ));
+    const contactsSnapshot = await getDocs(contactsRef);
+    
+  };
+
+  
+  const handleSearchChange = (e: any) => {
+    setSearchContact(e.target.value);
+  }
+  
+  
+  
+  
+  const handleSignOut = async ()  => {
+    await signOut (auth).catch((err) => {
       alert(err.message);
     });
     navigate("/");
   };
-
+  
   return (
     <Drawer variant="permanent" {...other} >
       <List disablePadding sx={{ bgcolor: '#1C1D22' }}>
@@ -79,14 +107,14 @@ const Navigator = (props: any ) => {
                 sx={{
                   textDecoration: 'none',
                   color: lightColor,
-                  ml: 2,
+                  ml: 15,
                   '&:hover': {
                     color: 'common.white',
                   },
                 }}
                 rel="noopener noreferrer"
                 onClick={ handleSignOut}
-              >
+                >
                 Log out
               </Link>
         </ListItem>
@@ -117,15 +145,19 @@ const Navigator = (props: any ) => {
                 </List>
               </Collapse>
             <Divider sx={{ mt: 2, bg: '#1C1D22' }} />
+            <TextField sx={{ color: '#fff', bgcolor: '#fff', mt: 2, mb: 2, ml: 2, mr: 2 }} id="outlined-basic" label="Search contact" variant="outlined" value={searchContact} onChange={(e) => handleSearchChange(e)} />
             <ListItemButton onClick={ handleContactsClicks } sx={{ color: '#fff', py: 2, px: 3 }}>
                 <ListItemText primary="Contacts" />
                   {contactsOpen ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
               <Collapse in={contactsOpen} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                  <ListItemButton sx={{ pl: 4 }}>
+                  {contacts.map((contact: any) => (
+                    <ListItemButton sx={{ pl: 4 }}>
                     <ListItemText primary="Contact Cards" sx={{ color: '#fff'}}/>
                   </ListItemButton>
+                    
+                    ))}
                 </List>
               </Collapse>
           </Box>
@@ -133,5 +165,7 @@ const Navigator = (props: any ) => {
     </Drawer>
   )
 }
+// contactsSnapshot.map().doc
+
 
 export default Navigator

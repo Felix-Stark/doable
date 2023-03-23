@@ -6,13 +6,34 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
+import { uid } from 'uid';
+import dayjs from 'dayjs';
+
+
 
 interface SendMessageProps {
     scroll: React.RefObject<HTMLSpanElement>;
 }
 
 const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
-    const [message, setMessage] = useState(''); // Skapar en state för meddelandet som sätts till en tom sträng
+
+    const user = useSelector((state: RootState) => state.api.doUser);
+    
+    const [message, setMessage] = useState({
+        messageId: '',
+        senderId: user?.email || '', 
+        username: '',
+        recipient: '',
+        content: '',
+        timestamp: '',
+        recieved: false,
+        read: false,
+
+    }); 
+    
+    // Skapar en state för meddelandet som sätts till en tom sträng
 
     // Skapar en sendMessage funktion som körs när användaren klickar på button Submit
 
@@ -24,23 +45,26 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
 
     // Det kommer också skapa en ny dokument i collectionen med ett unikt id som är skapat av firebase. Dessa keys är unika för varje dokument och kan användas för att identifiera dokumenten och läsa eller skriva till dem.
 
-    const [user]: | any = useAuthState(auth);
-    const sendMessage = async (event: any) => { 
 
+    const sendMessage = async (event: any) => { 
+        const saveMessage = {
+            ...message,
+            messageId: uid(),
+            senderId: user?.email || '', //skickarens email
+            recipient: '', //mottagares email
+            timestamp: dayjs().format(),
+        }
         event.preventDefault();
-        if (message.trim() === '') {
+        if (message.content.trim() === '') {
             alert('Please enter a message');
             return;
         }
-        const { uid, displayName, photoURL } = user;  // Run a dispatch för användarens inloggade uid, namn och profilbild 
-        await addDoc(collection(db, 'messages'), {
-            text: message,
-            name: displayName,
-            avatar: photoURL,
-            createdAt: serverTimestamp(),
-            uid,
+
+        await addDoc(collection(db, 'messages'), saveMessage);
+        setMessage({
+            ...message,
+            content: ''
         });
-        setMessage('');
         scroll.current?.scrollIntoView({ behavior: 'smooth' });
 
     };
@@ -48,25 +72,29 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
 
   return (
       <Box component="form"  sx={{
-          '& .SendMessage-root': { m: 1, width: '25ch' },
+          '& .SendMessage-root': { m: 1, width: '25ch', borderRadius: '0', height:'5em', },
         }}
         noValidate
         autoComplete="off" onSubmit={(event) => sendMessage(event)}>
-            <TextField
-                id='outlined-multiline-static'
+            <TextField sx={{borderRadius: '0', width: '15em', backgroundColor: '#fff'}}
+                id='filled-basic'
                 label='Write message'
+                variant='filled'
                 multiline
                 maxRows={4}
-                value={message}
-                onChange={(e: any) => setMessage (e.target.value)}
+                value={message.content}
+                onChange={(e: any) => setMessage ({
+                    ...message,
+                    content: e.target.value,
+                })}
                 onKeyDown={(e:any) => {
                     if (e.keyCode === 13) {
                         sendMessage(e);
                     }
                 }}
                 />
+            <Button variant="contained" sx={{borderRadius: '0',backgroundColor: '#1C1D22', color: '#fff', width:'2em'}} endIcon={<SendIcon sx={{height: '2.2em', width:'2em'}} />} type='submit' />
             <Box component="span" ref={scroll} />
-            <Button variant="contained" endIcon={<SendIcon/>}type='submit' />
     </Box>
   );
 };

@@ -21,37 +21,21 @@ interface NavBarProps {
   onDrawerToggle: () => void;
 }
 
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
 
 export default function MenuBar(props: NavBarProps) {
   const { onDrawerToggle } = props;
   
+  const [value, setValue] = React.useState(0);
 
-  // const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-  //   null
-  // );
-  // const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-  //   null
-  // );
-  // const [photoURL, setPhotoURL] = React.useState("");
-
-  // const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-  //   setAnchorElNav(event.currentTarget);
-  // };
-  // const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-  //   setAnchorElUser(event.currentTarget);
-  // };
-
-  // const handleCloseNavMenu = () => {
-  //   setAnchorElNav(null);
-  // };
-
-
-  // const handleSignOut = () => {
-  //   signOut(auth).catch((err) => {
-  //     alert(err.message);
-  //   });
-  //   navigate("/");
-  // };
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+ 
   
 
   const dispatch = useDispatch(); 
@@ -83,9 +67,9 @@ export default function MenuBar(props: NavBarProps) {
         </Toolbar>
       </AppBar>
       <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0,  backgroundColor: '#1C1D22'  }}>
-        <Tabs value={0} textColor="inherit">
-          <Tab label="Todos" onClick={() => dispatch(switchView(true))} />
-          <Tab label="Chat" onClick={() => dispatch(switchView(false)) } />
+        <Tabs value={value} onChange={handleChange} textColor="inherit" indicatorColor="secondary" >
+          <Tab value={0} label="Todos" onClick={() => dispatch(switchView(true))} />
+          <Tab value={1}  label="Chat" onClick={() => dispatch(switchView(false)) } />
         </Tabs>
       </AppBar>
     </React.Fragment>
