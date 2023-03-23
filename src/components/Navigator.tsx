@@ -20,9 +20,14 @@ import { signOut, User } from "firebase/auth";
 import { auth } from "../firebase-config";
 
 // To get contacts
-import { collection, getDocs , doc , where , query} from "firebase/firestore";
+import { collection, getDocs , doc , where , query, getDoc, setDoc} from "firebase/firestore";
 import { db } from "../firebase-config";
-import { TextField } from '@mui/material';
+import { Button, IconButton, TextField } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
+import { DoableUser } from '../types';
+import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { selectedList } from '../features/apiSlice';
 
 
 
@@ -49,11 +54,16 @@ const Navigator = (props: any ) => {
   const [contactsOpen, setContactsOpen] = React.useState(false);
   const [todosOpen, setTodosOpen] = React.useState(false);
   const [contacts, setContacts] = React.useState([]);
+  const [foundContact, setFoundContact] = useState<DoableUser>()
   const [searchContact, setSearchContact] = React.useState('');
-
+  const user = useSelector((state: RootState) => state.api.doUser)
   const navigate = useNavigate();
   const lightColor = "rgba(255, 255, 255, 0.7)";
 
+
+//   const searchQuery = doc(db, 'users', searchContact);
+
+//   const [docs, loading, error, snapshot] = useDocumentData(searchQuery);
 
   const handleMessagesClicks = () => {
     setMessagesOpen(!messagesOpen);
@@ -74,19 +84,19 @@ const Navigator = (props: any ) => {
   // Get contacts from firestore
 
   const fetchContacts = async () => {
-    const contactsRef = query(collection(db, "users"), where("email", "==", searchContact ));
-    const contactsSnapshot = await getDocs(contactsRef);
-    
+    const contactData = await getDoc(doc(db, 'users', searchContact))
+    if( contactData ) {
+		const contactInfo = contactData.data();
+		console.log(contactInfo)
+		setFoundContact(contactInfo as unknown as DoableUser)
+    }
   };
 
   
   const handleSearchChange = (e: any) => {
     setSearchContact(e.target.value);
   }
-  
-  
-  
-  
+
   const handleSignOut = async ()  => {
     await signOut (auth).catch((err) => {
       alert(err.message);
@@ -96,75 +106,116 @@ const Navigator = (props: any ) => {
   };
   
   return (
-    <Drawer variant="permanent" {...other} >
-      <List disablePadding sx={{ bgcolor: '#1C1D22' }}>
-        <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff', bgcolor: '#1C1D22' }}>
+    <Drawer variant="permanent" {...other}>
+      <List disablePadding sx={{ bgcolor: "#1C1D22" }}>
+        <ListItem
+          sx={{
+            ...item,
+            ...itemCategory,
+            fontSize: 22,
+            color: "#fff",
+            bgcolor: "#1C1D22",
+          }}
+        >
           <Tooltip title="Your profil">
-            <Avatar src="" alt="My Avatar" sx={{backgroundColor: '#FFC61A', width: 45, height: 45}}/>
+            <Avatar
+              src=""
+              alt="My Avatar"
+              sx={{ backgroundColor: "#FFC61A", width: 45, height: 45 }}
+            />
           </Tooltip>
-              <Link
-                href="/"
-                variant="body2"
-                sx={{
-                  textDecoration: 'none',
-                  color: lightColor,
-                  ml: 15,
-                  '&:hover': {
-                    color: 'common.white',
-                  },
-                }}
-                rel="noopener noreferrer"
-                onClick={ handleSignOut}
-                >
-                Log out
-              </Link>
+          <Link
+            href="/"
+            variant="body2"
+            sx={{
+              textDecoration: "none",
+              color: lightColor,
+              ml: 15,
+              "&:hover": {
+                color: "common.white",
+              },
+            }}
+            rel="noopener noreferrer"
+            onClick={handleSignOut}
+          >
+            Log out
+          </Link>
         </ListItem>
         <ListItem sx={{ ...item, ...itemCategory }}>
           <ListItemText>Your info</ListItemText>
         </ListItem>
-          <Box sx={{ bgcolor: '#1C1D22' }}>
-            <ListItemButton onClick={ handleTodosClicks } sx={{ color: '#fff', py: 2, px: 3 }}>
-                <ListItemText primary="Todos" />
-                  {todosOpen ? <ExpandLess /> : <ExpandMore />}
+        <Box sx={{ bgcolor: "#1C1D22" }}>
+          <ListItemButton
+            onClick={handleTodosClicks}
+            sx={{ color: "#fff", py: 2, px: 3 }}
+          >
+            <ListItemText primary="Todos" />
+            {todosOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={todosOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemText primary="Todos Cards" sx={{ color: "#fff" }} />
               </ListItemButton>
-              <Collapse in={todosOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText primary="Todos Cards" sx={{ color: '#fff'}}/>
-                  </ListItemButton>
-                </List>
-              </Collapse>
-              <ListItemButton onClick={ handleMessagesClicks } sx={{ color: '#fff', py: 2, px: 3 }}>
-                <ListItemText primary="Messages" />
-                  {messagesOpen ? <ExpandLess /> : <ExpandMore />}
+            </List>
+          </Collapse>
+          <ListItemButton
+            onClick={handleMessagesClicks}
+            sx={{ color: "#fff", py: 2, px: 3 }}
+          >
+            <ListItemText primary="Messages" />
+            {messagesOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={messagesOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemText primary="Messages Cards" sx={{ color: "#fff" }} />
               </ListItemButton>
-              <Collapse in={messagesOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText primary="Messages Cards" sx={{ color: '#fff'}}/>
-                  </ListItemButton>
-                </List>
-              </Collapse>
-            <Divider sx={{ mt: 2, bg: '#1C1D22' }} />
-            <TextField sx={{ color: '#fff', bgcolor: '#fff', mt: 2, mb: 2, ml: 2, mr: 2 }} id="outlined-basic" label="Search contact" variant="outlined" value={searchContact} onChange={(e) => handleSearchChange(e)} />
-            <ListItemButton onClick={ handleContactsClicks } sx={{ color: '#fff', py: 2, px: 3 }}>
-                <ListItemText primary="Contacts" />
-                  {contactsOpen ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-              <Collapse in={contactsOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {contacts.map((contact: any) => (
-                    <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText primary="Contact Cards" sx={{ color: '#fff'}}/>
-                  </ListItemButton>
-                    
-                    ))}
-                </List>
-              </Collapse>
-          </Box>
+            </List>
+          </Collapse>
+          <Divider sx={{ mt: 2, bg: "#1C1D22" }} />
+          <ListItemButton
+            onClick={handleContactsClicks}
+            sx={{ color: "#fff", py: 2, px: 3 }}
+          >
+            {contactsOpen ? <ExpandLess /> : <ExpandMore />}
+            <ListItemText primary="Contacts" />
+          </ListItemButton>
+          <Collapse in={contactsOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <TextField
+                sx={{
+                  color: "#fff",
+                  bgcolor: "#fff",
+                  mt: 2,
+                  mb: 2,
+                  ml: 2,
+                  mr: 2,
+                }}
+                id="outlined-basic"
+                label="Search contact"
+                variant="outlined"
+                value={searchContact}
+                onChange={(e) => setSearchContact(e.target.value)}
+              />
+              
+				<Button onClick={ fetchContacts }>KNAPP</Button>
+
+
+              {contacts.map((contact: any) => (
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemText
+                    primary="Contact Cards"
+                    sx={{ color: "#fff" }}
+                  />
+                </ListItemButton>
+              ))}
+            </List>
+          </Collapse>
+        </Box>
       </List>
     </Drawer>
-  )
+  );
 }
 // contactsSnapshot.map().doc
 
