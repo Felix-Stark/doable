@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "firebase/auth";
 import { DoableUser, Todo } from "../types"; 
+import { TodoList } from "../types";
 
 const initialState = {
   themeMode: true, //lightMode = true, darkMode = false
   currentList: '', // chosen list of todos to be displayed,
-  showTaskmanager: true, //onClick newTask set true
+  showTaskmanager: false, //onClick newTask set true
   showChat: false,
-  toggleView: true,
   selectedTask: {}, // for update task
   toggleLoader: false,
   doUser: {} as DoableUser,
@@ -28,9 +28,6 @@ export const apiSlice = createSlice({
     toggleChat: (state, action: PayloadAction<boolean>) => {
       state.showChat = action.payload;
     },
-    switchView: (state, action: PayloadAction<boolean>) => {
-      state.toggleView = action.payload;
-    },
     showLoader: (state, action: PayloadAction<boolean>) => {
       state.toggleLoader = action.payload;
     },
@@ -49,6 +46,6 @@ export const apiSlice = createSlice({
   },
 });
 
-export const { colorMode, showLoader, currentUser, selectedList, todos, toggleTaskmanager, toggleChat, switchView, addTodo } = apiSlice.actions;
+export const { colorMode, showLoader, currentUser, selectedList, todos, toggleTaskmanager, toggleChat, addTodo } = apiSlice.actions;
 
 export default apiSlice.reducer;

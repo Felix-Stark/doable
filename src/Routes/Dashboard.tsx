@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { auth, db } from "../firebase-config";
-import { signOut } from "firebase/auth";
+import { signOut, User } from "firebase/auth";
 import { uid } from "uid";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Box, CssBaseline, Stack, Typography, useMediaQuery } from "@mui/material";
@@ -12,7 +12,7 @@ import { createTheme } from '@mui/material/styles';
 import AddTodo from "../components/AddTodo";
 import ChatComp from "../components/ChatComp";
 import { collection, DocumentData, getDocs, onSnapshot, query, where, doc, getDoc } from "firebase/firestore";
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { currentUser } from "../features/apiSlice";
 import { DoableUser } from "../types";
 import Taskmanager from "../components/Taskmanager";
@@ -23,6 +23,7 @@ import Navigator from '../components/Navigator';
 import NavBar from '../components/NavBar';
 import { Copyright } from "@mui/icons-material";
 import Content from "../components/Content";
+import { RootState } from "../store";
 
 const drawerWidth = 256;
 
@@ -187,7 +188,7 @@ const Dashboard = () => {
   const [showTasks, setShowTasks] = useState<Task[]>([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const user = useSelector((state: RootState) => state.api.doUser)
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
@@ -196,20 +197,15 @@ const Dashboard = () => {
   };
 
 	useEffect(() => {
-		auth.onAuthStateChanged( async (user) => {
-			if ( user ) {
-				const getUser = await getDoc(doc(db, 'users', user.email as string))
-				if( getUser ) {
-					dispatch(currentUser(getUser.data() as DoableUser));
-				} else {
-					navigate('/user-settings')
-				}
-				console.log('getUser: ', getUser.data())
-				
-			} else {
-				navigate('/')
-			}
-		})
+        const signedInUser = auth.currentUser;
+        if ( signedInUser ) {
+          getDoc(doc(db, 'users', signedInUser.email as string)).then((saveUser) => {
+            dispatch(currentUser(saveUser.data() as DoableUser));
+          })
+        } else {
+          navigate('/')
+
+        }
 	}, [])
 
   return (
