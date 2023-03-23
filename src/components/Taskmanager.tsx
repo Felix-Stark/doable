@@ -20,6 +20,7 @@ import { DoableUser, Todo, TodoList } from "../types";
 import { RootState } from "../store";
 import ShowList from "./ShowList";
 import AddList from "./AddList";
+
 const Taskmanager = () => {
 	const user = useSelector((state: RootState) => state.api.doUser);
 	const isUser = auth.currentUser;
@@ -44,7 +45,6 @@ const Taskmanager = () => {
       dispatch(selectedList(e.target.value))
     setOpenListForm(false)
   };
-
 
 
   return (

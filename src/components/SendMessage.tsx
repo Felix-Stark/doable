@@ -23,7 +23,8 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
     
     const [message, setMessage] = useState({
         messageId: '',
-        senderId: user.email,
+        senderId: user?.email || '', 
+        username: '',
         recipient: '',
         content: '',
         timestamp: '',
@@ -49,6 +50,7 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
         const saveMessage = {
             ...message,
             messageId: uid(),
+            senderId: user?.email || '', //skickarens email
             recipient: '', //mottagares email
             timestamp: dayjs().format(),
         }

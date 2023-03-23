@@ -46,9 +46,19 @@ const itemCategory = {
   px: 2,
 };
 
+interface ChatCompProps {
+  content: string;
+  messageId: string;
+  read: boolean;
+  recived: boolean;
+  recipient: string;
+  senderId: string;
+  timestamp: string;
+  email: string;
+}
 
 
-const ChatComp = () => {
+const ChatComp = (props: ChatCompProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [tasksOpen, setTaskOpen] = React.useState(true);
   const user = useSelector((state: RootState) => state.api.doUser)
@@ -71,12 +81,12 @@ const ChatComp = () => {
   };
   
     
-    const toggleDrawer = (anchor: Anchor, open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if ( event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
-        return;
-      }
-      setState({ ...state, [anchor]: open });
-    };
+  const toggleDrawer = (anchor: Anchor, open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    if ( event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
+      return;
+    }
+    setState({ ...state, [anchor]: open });
+  };
 
     
     
@@ -176,6 +186,7 @@ const ChatComp = () => {
         })} */}
         { messages? messages.map((message) => {
           return (
+
             <ChatBubble key={message.timestamp} alignRight={message.senderId === user.email}>
               <Avatar sx={{width: "1.5em", height: "1.5em"}} src={user.avatar_url} alt="avatar" />
               <ChatBubbleRight alignRight={message.senderId === user.email}>
@@ -186,7 +197,6 @@ const ChatComp = () => {
             
             )
           })
-
         : ''}
       </Box>
       <Box component="span" ref={scroll} ></Box>
