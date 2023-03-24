@@ -84,6 +84,7 @@ const Navigator = (props: any ) => {
 		const contactInfo = contactData.data();
 		console.log(contactInfo)
 		setFoundContact(contactInfo as unknown as DoableUser)
+    setSearchContact('');
     }
   };
 
