@@ -17,10 +17,10 @@ export default function Content() {
 
    
   return (
-    <Paper sx={{ maxWidth: '100vw', minHeight: '100vh', margin: 'auto', overflow: 'hidden' }}>
+    <Paper sx={{ maxWidth: '100vw', height: '100%', position: 'relative'}}>
         { showTaskmanager ? 
         <Taskmanager /> : ''
       }
-      { showChat ? <ChatComp /> : '' }
+      { showChat ? <ChatComp content={''} messageId={''} read={false} recived={false} recipient={''} senderId={''} timestamp={''} email={''} /> : '' }
   </Paper>
 )}

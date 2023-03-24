@@ -210,7 +210,7 @@ const Dashboard = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      <Box sx={{ display: 'flex', maxHeight: '100vh', height: '100%' }}>
         <CssBaseline />
         <Box
           component="nav"

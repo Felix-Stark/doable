@@ -50,6 +50,7 @@ export const lightTheme: ThemeOptions = createTheme({
       default: "#ffffff",
       paper: "#c9c8c0",
     },
+    
   },
   typography: {
     h1: {

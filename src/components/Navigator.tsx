@@ -9,12 +9,9 @@ import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import { ExpandLess, ExpandMore, FormatListBulleted, StarBorder } from '@mui/icons-material';
+import { Email, ExpandLess, ExpandMore, FormatListBulleted, StarBorder } from '@mui/icons-material';
 import Collapse from '@mui/material/Collapse';
 import Tooltip from '@mui/material/Tooltip';
-import InsertCommentIcon from '@mui/icons-material/InsertComment';
-import CommentIcon from '@mui/icons-material/Comment';
-import InboxIcon from '@mui/icons-material/Inbox';
 import { useNavigate } from "react-router";
 import { signOut, User } from "firebase/auth";
 import { auth } from "../firebase-config";
@@ -22,14 +19,12 @@ import { auth } from "../firebase-config";
 // To get contacts
 import { collection, getDocs , doc , where , query, getDoc, setDoc} from "firebase/firestore";
 import { db } from "../firebase-config";
-import { Button, IconButton, TextField } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { Button, Grid, IconButton, ListItemAvatar, Stack, TextField } from '@mui/material';
+import { ReactReduxContext, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { DoableUser } from '../types';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
-import { selectedList } from '../features/apiSlice';
-
-
+import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
 
 
 const item = {
@@ -105,6 +100,10 @@ const Navigator = (props: any ) => {
     })
   };
   
+  function generate(arg0: JSX.Element): React.ReactNode {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <Drawer variant="permanent" {...other}>
       <List disablePadding sx={{ bgcolor: "#1C1D22" }}>
@@ -173,43 +172,62 @@ const Navigator = (props: any ) => {
               </ListItemButton>
             </List>
           </Collapse>
+              <ListItemButton
+                onClick={handleContactsClicks}
+                sx={{ color: "#fff", py: 2, px: 3 }}
+              >
+          <ListItemText primary="Contacts" />
           <Divider sx={{ mt: 2, bg: "#1C1D22" }} />
-          <ListItemButton
-            onClick={handleContactsClicks}
-            sx={{ color: "#fff", py: 2, px: 3 }}
-          >
             {contactsOpen ? <ExpandLess /> : <ExpandMore />}
-            <ListItemText primary="Contacts" />
           </ListItemButton>
           <Collapse in={contactsOpen} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <TextField
+            <List sx={{display: 'flex',flexDirection: 'column', alignItems:'center'}} component="div" >
+              <Stack flexDirection={"row"}>
+              <TextField color={"primary"}
                 sx={{
-                  color: "#fff",
                   bgcolor: "#fff",
                   mt: 2,
                   mb: 2,
                   ml: 2,
                   mr: 2,
+                  borderRadius: 1,
                 }}
-                id="outlined-basic"
-                label="Search contact"
+                id="outlined-search"
+                placeholder="Search contact"
                 variant="outlined"
                 value={searchContact}
                 onChange={(e) => setSearchContact(e.target.value)}
               />
               
-				<Button onClick={ fetchContacts }>KNAPP</Button>
-
-
-              {contacts.map((contact: any) => (
-                <ListItemButton sx={{ pl: 4 }}>
-                  <ListItemText
-                    primary="Contact Cards"
-                    sx={{ color: "#fff" }}
-                  />
-                </ListItemButton>
-              ))}
+              <Button  onClick={ fetchContacts }><SearchIcon sx={{color:'#fff'}}/></Button>
+              </Stack>
+              
+              { foundContact && (
+                      <Box  sx={{display:'flex', alignContent:'center', width: '100%',height:'3em', maxWidth: 360, bgcolor: '#141416' }} >
+                            <ListItemAvatar sx={{display: 'flex', justifyContent:'center', alignItems:'center'}}>
+                              <Avatar
+                                  src={foundContact.avatar_url}
+                                  alt="My Avatar"
+                                  sx={{ backgroundColor: "#FFC61A", width: 30, height: 30 }}
+                                /> 
+                            </ListItemAvatar>
+                            <ListItem sx={{display: 'flex', flexDirection:'row', justifyContent: 'space-between' }}>
+                            <Stack>
+                              <Typography sx={{ display: 'inline', color:"#fff",  }} component="span" variant="body2">
+                                {foundContact.username}
+                              </Typography>
+                              <Typography sx={{ display: 'inline', color:"#fff", opacity:"0.4" }} component="span" variant="body2">
+                                {foundContact.email}
+                              </Typography>
+                            </Stack>
+                            <IconButton sx={{ bgcolor:'#FFC61A', width: 30, height: 30}} >
+                              <AddIcon sx={{ display: 'flex',alignItems:'center', justifyContent:'center' ,color: '#000', fontSize: 15 }} />
+                            </IconButton>
+                          </ListItem>
+                          
+                          
+                      </Box>
+              )}
             </List>
           </Collapse>
         </Box>
@@ -217,7 +235,7 @@ const Navigator = (props: any ) => {
     </Drawer>
   );
 }
-// contactsSnapshot.map().doc
+
 
 
 export default Navigator

@@ -180,7 +180,9 @@ const ChatComp = (props: ChatCompProps) => {
           </Grid>
           </React.Fragment>
         ))}
-      <Box sx={{ height: '100vh' }}>
+      <Box position={ 'relative' } overflow={ 'scroll' } width={ '100%' } minHeight={'100%'} display={'flex'} flexDirection={ 'column' } justifyContent={ 'flex-end' }
+        
+      >
         {/* {messages?.map((messages) => {
           return (<Messages key={messages.timestamp} messageId={messages.content} senderId={""} recipientId={""} content={""} timestamp={""} avatar_url={""} recevied={false} read={false}   />  )
         })} */}
@@ -198,11 +200,11 @@ const ChatComp = (props: ChatCompProps) => {
             )
           })
         : ''}
-      </Box>
-      <Box component="span" ref={scroll} ></Box>
-      <Box sx={{ display: 'flex',  justifyContent: 'center', alignItems: 'center', backgroundColor: 
-    '#1C1D22' }} >
-        <SendMessage scroll={scroll}  />
+        <Box component="span" ref={scroll} ></Box>
+        <Box sx={{ display: 'flex',  justifyContent: 'center', alignItems: 'center', backgroundColor: 
+        '#000' }} >
+          <SendMessage scroll={scroll}  />
+        </Box>
       </Box>
   </>
   );

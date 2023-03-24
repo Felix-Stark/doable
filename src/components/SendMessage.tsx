@@ -72,7 +72,7 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
 
   return (
       <Box component="form"  sx={{
-          '& .SendMessage-root': { m: 1, width: '25ch', borderRadius: '0', height:'5em', },
+          '& .SendMessage-root': { m: 1, width: '25ch', borderRadius: '0', height:'5em', }, position: 'fixed', bottom: 15
         }}
         noValidate
         autoComplete="off" onSubmit={(event) => sendMessage(event)}>
