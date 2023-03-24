@@ -20,14 +20,14 @@ import { signOut, User } from "firebase/auth";
 import { auth } from "../firebase-config";
 
 // To get contacts
-import { collection, getDocs , doc , where , query, getDoc, setDoc} from "firebase/firestore";
+import { collection, getDocs , doc , where , query, getDoc, setDoc, orderBy} from "firebase/firestore";
 import { db } from "../firebase-config";
 import { Button, IconButton, TextField } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { DoableUser } from '../types';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
-import { selectedList } from '../features/apiSlice';
+import { DoableUser, TodoList } from '../types';
+import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
+import { selectedList, toggleTaskmanager } from '../features/apiSlice';
 
 
 
@@ -53,6 +53,7 @@ const Navigator = (props: any ) => {
   const [messagesOpen, setMessagesOpen] = React.useState(false);
   const [contactsOpen, setContactsOpen] = React.useState(false);
   const [todosOpen, setTodosOpen] = React.useState(false);
+  const [todoLists, setTodoLists] = useState<TodoList[]>()
   const [contacts, setContacts] = React.useState([]);
   const [foundContact, setFoundContact] = useState<DoableUser>()
   const [searchContact, setSearchContact] = React.useState('');
@@ -60,10 +61,10 @@ const Navigator = (props: any ) => {
   const navigate = useNavigate();
   const lightColor = "rgba(255, 255, 255, 0.7)";
 
+  const dispatch = useDispatch();
+  
 
-//   const searchQuery = doc(db, 'users', searchContact);
 
-//   const [docs, loading, error, snapshot] = useDocumentData(searchQuery);
 
   const handleMessagesClicks = () => {
     setMessagesOpen(!messagesOpen);
@@ -77,9 +78,24 @@ const Navigator = (props: any ) => {
     }
   };
 
-  const handleTodosClicks = () => {
+  const handleTodosClicks = async () => {
     setTodosOpen(!todosOpen);
+    if ( todosOpen == true ) {
+      const todoListQuery = query(
+        collection(db, "todolists"),
+        where("participants", "array-contains", user.email), orderBy('timestamp')
+      );
+      const userLists = (await getDocs(todoListQuery)).docs
+      setTodoLists(userLists.map((doc) => doc.data()) as unknown as TodoList[]);
+      console.log(todoLists)
+    }
   };
+  const pickAList = (title: string) => {
+    dispatch(selectedList(title));
+    dispatch(toggleTaskmanager(true));
+  };
+
+
 
   // Get contacts from firestore
 
@@ -104,6 +120,8 @@ const Navigator = (props: any ) => {
       navigate("/");
     })
   };
+
+  
   
   return (
     <Drawer variant="permanent" {...other}>
@@ -145,6 +163,7 @@ const Navigator = (props: any ) => {
           <ListItemText>Your info</ListItemText>
         </ListItem>
         <Box sx={{ bgcolor: "#1C1D22" }}>
+          {/* TODOS START */}
           <ListItemButton
             onClick={handleTodosClicks}
             sx={{ color: "#fff", py: 2, px: 3 }}
@@ -154,11 +173,18 @@ const Navigator = (props: any ) => {
           </ListItemButton>
           <Collapse in={todosOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText primary="Todos Cards" sx={{ color: "#fff" }} />
-              </ListItemButton>
+              <ListItem sx={{ pl: 4 }} onClick={ handleTodosClicks }>
+                { user ? todoLists?.map((list) => {
+                  return(
+                    <ListItemButton key={list.id} onClick={() => pickAList(list.title) }>
+                      <ListItemText primary={ list.title } sx={{ color: "#fff"}} />
+                    </ListItemButton>
+                  )
+                }) : ''}
+              </ListItem>
             </List>
           </Collapse>
+          {/* TODOS END */}
           <ListItemButton
             onClick={handleMessagesClicks}
             sx={{ color: "#fff", py: 2, px: 3 }}
