@@ -108,7 +108,7 @@ const ChatComp = (props: ChatCompProps) => {
             <Avatar src="" alt="" sx={{backgroundColor: '#FFC61A' ,width: 95, height: 95}}/>
         <Typography variant="h6" sx={{color: '#fff', fontWeight: '300', fontSize: 16, paddingTop: 2}}>Name
         </Typography>
-        <Typography variant="h6" sx={{color: 'grey', fontWeight: '300', fontSize: 16, paddingTop: .5 }}>+46 123 456 789
+        <Typography variant="h6" sx={{color: 'grey', fontWeight: '300', fontSize: 16, paddingTop: .5 }}>Email
         </Typography>
       </List>
       <Divider />

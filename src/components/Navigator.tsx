@@ -25,6 +25,7 @@ import { RootState } from '../store';
 import { DoableUser } from '../types';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
+import { currentUser } from '../features/apiSlice';
 
 
 const item = {
@@ -101,9 +102,7 @@ const Navigator = (props: any ) => {
     })
   };
   
-  function generate(arg0: JSX.Element): React.ReactNode {
-    throw new Error('Function not implemented.');
-  }
+  
 
   return (
     <Drawer variant="permanent" {...other}>
@@ -119,7 +118,7 @@ const Navigator = (props: any ) => {
         >
           <Tooltip title="Your profil">
             <Avatar
-              src=""
+              src={user?.avatar_url ?? ""}
               alt="My Avatar"
               sx={{ backgroundColor: "#FFC61A", width: 45, height: 45 }}
             />
@@ -142,7 +141,7 @@ const Navigator = (props: any ) => {
           </Link>
         </ListItem>
         <ListItem sx={{ ...item, ...itemCategory }}>
-          <ListItemText>Your info</ListItemText>
+          <ListItemText>{user?.username}</ListItemText>
         </ListItem>
         <Box sx={{ bgcolor: "#1C1D22" }}>
           <ListItemButton
@@ -225,10 +224,10 @@ const Navigator = (props: any ) => {
                               <AddIcon sx={{ display: 'flex',alignItems:'center', justifyContent:'center' ,color: '#000', fontSize: 15 }} />
                             </IconButton>
                           </ListItem>
-                          
-                          
                       </Box>
               )}
+
+              
             </List>
           </Collapse>
         </Box>

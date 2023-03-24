@@ -19,7 +19,6 @@ import Grid from "@mui/material/Unstable_Grid2";
 
 import backdrop from '../assets/backdrop.png'
 import { DoableUser } from "../types";
-import { BlurOn } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { currentUser, showLoader } from "../features/apiSlice";
 
