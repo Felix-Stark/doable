@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -26,6 +26,7 @@ import { DoableUser } from '../types';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import { currentUser } from '../features/apiSlice';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 
 const item = {
@@ -57,9 +58,10 @@ const Navigator = (props: any ) => {
   const lightColor = "rgba(255, 255, 255, 0.7)";
 
 
-//   const searchQuery = doc(db, 'users', searchContact);
+  const searchQuery = query(collection(db, 'users', user.email, 'contacts'));
 
-//   const [docs, loading, error, snapshot] = useDocumentData(searchQuery);
+  const [docs, loading, error, snapshot] = useCollectionData(searchQuery);
+
 
   const handleMessagesClicks = () => {
     setMessagesOpen(!messagesOpen);
@@ -68,9 +70,7 @@ const Navigator = (props: any ) => {
   // Get contacts from firestore
   const handleContactsClicks = () => {
     setContactsOpen(!contactsOpen);
-    if(!contactsOpen) {
-      fetchContacts();
-    }
+    
   };
 
   const handleTodosClicks = () => {
@@ -79,7 +79,7 @@ const Navigator = (props: any ) => {
 
   // Get contacts from firestore
 
-  const fetchContacts = async () => {
+  const getSearchContact = async () => {
     const contactData = await getDoc(doc(db, 'users', searchContact))
     if( contactData ) {
 		const contactInfo = contactData.data();
@@ -88,6 +88,11 @@ const Navigator = (props: any ) => {
     setSearchContact('');
     }
   };
+
+  const addContact = () => {
+    setDoc(doc(db, 'users', user.email, 'contacts', foundContact?.username as string), foundContact)
+    console.log('added contact: ', foundContact)
+  }
 
   
   const handleSearchChange = (e: any) => {
@@ -102,7 +107,7 @@ const Navigator = (props: any ) => {
     })
   };
   
-  
+
 
   return (
     <Drawer variant="permanent" {...other}>
@@ -144,6 +149,7 @@ const Navigator = (props: any ) => {
           <ListItemText>{user?.username}</ListItemText>
         </ListItem>
         <Box sx={{ bgcolor: "#1C1D22" }}>
+          {/* TODOS START */}
           <ListItemButton
             onClick={handleTodosClicks}
             sx={{ color: "#fff", py: 2, px: 3 }}
@@ -158,6 +164,7 @@ const Navigator = (props: any ) => {
               </ListItemButton>
             </List>
           </Collapse>
+          {/* MESSAGES START */}
           <ListItemButton
             onClick={handleMessagesClicks}
             sx={{ color: "#fff", py: 2, px: 3 }}
@@ -172,63 +179,195 @@ const Navigator = (props: any ) => {
               </ListItemButton>
             </List>
           </Collapse>
-              <ListItemButton
-                onClick={handleContactsClicks}
-                sx={{ color: "#fff", py: 2, px: 3 }}
-              >
-          <ListItemText primary="Contacts" />
-          <Divider sx={{ mt: 2, bg: "#1C1D22" }} />
+          {/* CONTACTS START */}
+          <ListItemButton
+            onClick={handleContactsClicks}
+            sx={{ color: "#fff", py: 2, px: 3 }}
+          >
+            <ListItemText primary="Contacts" />
+            <Divider sx={{ mt: 2, bg: "#1C1D22" }} />
             {contactsOpen ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
           <Collapse in={contactsOpen} timeout="auto" unmountOnExit>
-            <List sx={{display: 'flex',flexDirection: 'column', alignItems:'center'}} component="div" >
-              <Stack flexDirection={"row"}>
-              <TextField color={"primary"}
+            <Box>
+              <List
                 sx={{
-                  bgcolor: "#fff",
-                  mt: 2,
-                  mb: 2,
-                  ml: 2,
-                  mr: 2,
-                  borderRadius: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
                 }}
-                id="outlined-search"
-                placeholder="Search contact"
-                variant="outlined"
-                value={searchContact}
-                onChange={(e) => setSearchContact(e.target.value)}
-              />
-              
-              <Button  onClick={ fetchContacts }><SearchIcon sx={{color:'#fff'}}/></Button>
-              </Stack>
-              
-              { foundContact && (
-                      <Box  sx={{display:'flex', alignContent:'center', width: '100%',height:'3em', maxWidth: 360, bgcolor: '#141416' }} >
-                            <ListItemAvatar sx={{display: 'flex', justifyContent:'center', alignItems:'center'}}>
-                              <Avatar
-                                  src={foundContact.avatar_url}
-                                  alt="My Avatar"
-                                  sx={{ backgroundColor: "#FFC61A", width: 30, height: 30 }}
-                                /> 
-                            </ListItemAvatar>
-                            <ListItem sx={{display: 'flex', flexDirection:'row', justifyContent: 'space-between' }}>
-                            <Stack>
-                              <Typography sx={{ display: 'inline', color:"#fff",  }} component="span" variant="body2">
-                                {foundContact.username}
-                              </Typography>
-                              <Typography sx={{ display: 'inline', color:"#fff", opacity:"0.4" }} component="span" variant="body2">
-                                {foundContact.email}
-                              </Typography>
-                            </Stack>
-                            <IconButton sx={{ bgcolor:'#FFC61A', width: 30, height: 30}} >
-                              <AddIcon sx={{ display: 'flex',alignItems:'center', justifyContent:'center' ,color: '#000', fontSize: 15 }} />
-                            </IconButton>
-                          </ListItem>
-                      </Box>
-              )}
+                component="div"
+              >
+                <Stack flexDirection={"row"}>
+                  <TextField
+                    color={"primary"}
+                    sx={{
+                      bgcolor: "#fff",
+                      mt: 2,
+                      mb: 2,
+                      ml: 2,
+                      mr: 2,
+                      borderRadius: 1,
+                    }}
+                    id="outlined-search"
+                    placeholder="Search contact"
+                    variant="outlined"
+                    value={searchContact}
+                    onChange={(e) => setSearchContact(e.target.value)}
+                  />
 
+                  <IconButton onClick={getSearchContact}>
+                    <SearchIcon sx={{ color: "#fff" }} />
+                  </IconButton>
+                </Stack>
+
+                {foundContact && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignContent: "center",
+                      width: "100%",
+                      height: "3em",
+                      maxWidth: 360,
+                      bgcolor: "#141416",
+                    }}
+                  >
+                    <ListItemAvatar
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Avatar
+                        src={foundContact.avatar_url}
+                        alt="My Avatar"
+                        sx={{ backgroundColor: "#FFC61A", width: 30, height: 30 }}
+                      />
+                    </ListItemAvatar>
+                    <ListItem
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Stack>
+                        <Typography
+                          sx={{ display: "inline", color: "#fff" }}
+                          component="span"
+                          variant="body2"
+                        >
+                          {foundContact.username}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            display: "inline",
+                            color: "#fff",
+                            opacity: "0.4",
+                          }}
+                          component="span"
+                          variant="body2"
+                        >
+                          {foundContact.email}
+                        </Typography>
+                      </Stack>
+                      <IconButton
+                        sx={{ bgcolor: "#FFC61A", width: 30, height: 30 }}
+                        onClick={addContact}
+                      >
+                        <AddIcon
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            color: "#000",
+                            fontSize: 15,
+                          }}
+                        />
+                      </IconButton>
+                    </ListItem>
+                  </Box>
+                )}
+              </List>
               
-            </List>
+                <List>
+                  {/* {docs && (
+                     docs?.map((doc) => {
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignContent: "center",
+                          width: "100%",
+                          height: "3em",
+                          maxWidth: 360,
+                          bgcolor: "#141416",
+                        }}
+                      >
+                        <ListItemAvatar
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Avatar
+                            src={doc.avatar_url}
+                            alt="My Avatar"
+                            sx={{
+                              backgroundColor: "#FFC61A",
+                              width: 30,
+                              height: 30,
+                            }}
+                          />
+                        </ListItemAvatar>
+                        <ListItem
+                          sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Stack>
+                            <Typography
+                              sx={{ display: "inline", color: "#fff" }}
+                              component="span"
+                              variant="body2"
+                            >
+                              {doc.username}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                display: "inline",
+                                color: "#fff",
+                                opacity: "0.4",
+                              }}
+                              component="span"
+                              variant="body2"
+                            >
+                              {doc.email}
+                            </Typography>
+                          </Stack>
+                          <IconButton
+                            sx={{ bgcolor: "#FFC61A", width: 30, height: 30 }}
+                            onClick={addContact}
+                          >
+                            <AddIcon
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                color: "#000",
+                                fontSize: 15,
+                              }}
+                            />
+                          </IconButton>
+                        </ListItem>
+                      </Box>;
+                    })
+                    )} */}
+              </List>
+            </Box>
           </Collapse>
         </Box>
       </List>
