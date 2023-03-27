@@ -1,4 +1,5 @@
 export type DoableUser = {
+  map(arg0: (foundContact: any) => JSX.Element): import("react").ReactNode;
 	username: string;
 	email: string;
 	avatar_url: string;

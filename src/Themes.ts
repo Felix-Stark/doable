@@ -8,16 +8,16 @@ export const darkTheme: ThemeOptions = createTheme({
       main: '#FFC61A',
     },
     secondary: {
-      main: '#9c27b0',
+      main: '#FFC61A',
     },
     success: {
-      main: '#00ffe1',
+      main: '#FFC61A',
     },
     background: {
       default: '#37313d',
     },
     info: {
-      main: '#b2ebf2',
+      main: '#FFC61A',
     },
   },
   typography: {
@@ -42,10 +42,12 @@ export const lightTheme: ThemeOptions = createTheme({
     },
     secondary: {
       main: "#FFC61A",
+      
     },
     success: {
       main: "#FFC61A",
     },
+
     background: {
       default: "#ffffff",
       paper: "#c9c8c0",

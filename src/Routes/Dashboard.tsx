@@ -21,8 +21,7 @@ import Taskmanager from "../components/Taskmanager";
 import Link from '@mui/material/Link';
 import Navigator from '../components/Navigator';
 import NavBar from '../components/NavBar';
-import { Copyright } from "@mui/icons-material";
-import Content from "../components/Content";
+
 import { RootState } from "../store";
 
 const drawerWidth = 256;
@@ -39,9 +38,9 @@ type Task = {
 let theme = createTheme({
   palette: {
     primary: {
-      light: '#63ccff', 
-      main: '#009be5',
-      dark: '#006db3',
+      light: '#FFC61A', 
+      main: '#FFC61A',
+      dark: '#FFC61A',
     },
   },
   typography: {
@@ -191,6 +190,8 @@ const Dashboard = () => {
   const user = useSelector((state: RootState) => state.api.doUser)
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const showTaskmanager = useSelector((state: RootState) => state.api.showTaskmanager);
+  const showChat = useSelector((state: RootState) => state.api.showChat);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -210,9 +211,9 @@ const Dashboard = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: 'flex', maxHeight: '100vh', height: '100%' }}>
+      <Box sx={{ display: 'flex', maxHeight: 'calc(100vh - 6rem)' }} maxWidth={'100%'}>
         <CssBaseline />
-        <Box
+        <Box 
           component="nav"
           sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         >
@@ -229,11 +230,14 @@ const Dashboard = () => {
             sx={{ display: { sm: 'block', xs: 'none' } }}
           />
         </Box>
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{  display: 'flex', flexDirection: 'column', width: '100%', height: '100%', bgcolor: '#141416'  }}>
           <NavBar onDrawerToggle={handleDrawerToggle} />
-          <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#141416' }}>
-            <Content />
-          </Box>
+          {/* <Box  sx={{  bgcolor: '#141416'}} > */}
+          { showTaskmanager ? 
+        <Taskmanager /> : ''
+      }
+      { showChat ? <ChatComp  /> : '' }
+          {/* </Box> */}
         </Box>
       </Box>
     </ThemeProvider>

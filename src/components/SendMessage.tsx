@@ -71,12 +71,12 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
 
 
   return (
-      <Box component="form"  sx={{
-          '& .SendMessage-root': { m: 1, width: '25ch', borderRadius: '0', height:'5em', }, position: 'fixed', bottom: 15
+      <Box component="form" display={'flex'} width={'100%'} justifyContent={'center'} px={5}  sx={{
+          '& .SendMessage-root': { m: 1, minWidth: '100%', borderRadius: '0', height:'5em' } 
         }}
         noValidate
         autoComplete="off" onSubmit={(event) => sendMessage(event)}>
-            <TextField sx={{borderRadius: '0', width: '15em', backgroundColor: '#fff'}}
+            <TextField  sx={{borderRadius: '10px 0px 0px 0px', backgroundColor: '#333', flex: '1'}}
                 id='filled-basic'
                 label='Write message'
                 variant='filled'
@@ -93,7 +93,7 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
                     }
                 }}
                 />
-            <Button variant="contained" sx={{borderRadius: '0',backgroundColor: '#1C1D22', color: '#fff', width:'2em'}} endIcon={<SendIcon sx={{height: '2.2em', width:'2em'}} />} type='submit' />
+            <Button variant="contained" sx={{borderRadius: '0px 10px 0px 0px', color: '#fff', width:'2em'}} endIcon={<SendIcon sx={{height: '2.2em', width:'2em'}} />} type='submit' />
             <Box component="span" ref={scroll} />
     </Box>
   );

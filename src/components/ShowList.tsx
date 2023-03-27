@@ -85,7 +85,7 @@ const ShowList = () => {
     <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
       { currentList == 'None' ? '' :
       <Stack flexDirection={"row"}>
-        <h3>{currentList}</h3>
+        <Typography>{currentList}</Typography>
         <IconButton onClick={toggleOpenDelete}>
           <DeleteRoundedIcon />
         </IconButton>
@@ -112,7 +112,7 @@ const ShowList = () => {
                   >
                     {todo.task}
                   </Typography>
-                  <IconButton onClick={() => handleDelete( todo.id as Todo["id"])}>
+                  <IconButton sx={{ bgcolor: "#FFC61A"}} onClick={() => handleDelete( todo.id as Todo["id"]) }>
                     <DeleteRoundedIcon />
                   </IconButton>
                 </ListItemButton>

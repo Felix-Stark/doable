@@ -46,25 +46,18 @@ const itemCategory = {
   px: 2,
 };
 
-interface ChatCompProps {
-  content: string;
-  messageId: string;
-  read: boolean;
-  recived: boolean;
-  recipient: string;
-  senderId: string;
-  timestamp: string;
-  email: string;
-}
 
 
-const ChatComp = (props: ChatCompProps) => {
+
+const ChatComp = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [tasksOpen, setTaskOpen] = React.useState(true);
   const user = useSelector((state: RootState) => state.api.doUser)
   const [state, setState] = React.useState({
     right: false,
   });
+  
+  
 
   useEffect(() => {
     const conversation = query(collection(db, "messages"), where('senderId', '==', user.email), orderBy("timestamp"), limit(50));
@@ -140,6 +133,7 @@ const ChatComp = (props: ChatCompProps) => {
     alignItems: 'flex-end',
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
+    marginRight: theme.spacing(2),
   }));
   
   // const Avatar = styled('img')(({ theme }) => ({
@@ -161,10 +155,10 @@ const ChatComp = (props: ChatCompProps) => {
 
 
   return (
-    <>
+    <Grid container minHeight={"calc(100vh - 6rem)"} width={'100%'} position={ 'relative' } alignContent={'flex-end'} >
       {(['right'] as const).map((anchor) => (
         <React.Fragment key={anchor}> 
-          <Grid item sx={{bgcolor: '#26272D'}} >
+          <Grid item sx={{bgcolor: '#26272D'}} position={ 'fixed' } top={'6rem'}  width={'100%'} zIndex={'1'} >
               <Tooltip title="Show • Contacts info">
                 <IconButton color="inherit" onClick={toggleDrawer(anchor,true)}>
                   <Avatar src="" alt="" sx={{backgroundColor: '#FFC61A'}}/>
@@ -180,12 +174,8 @@ const ChatComp = (props: ChatCompProps) => {
           </Grid>
           </React.Fragment>
         ))}
-      <Box position={ 'relative' } overflow={ 'scroll' } width={ '100%' } minHeight={'100%'} display={'flex'} flexDirection={ 'column' } justifyContent={ 'flex-end' }
-        
+      <Box position={ 'relative' } bottom={0} right={0}  width={ '100%' } minHeight={'100%'} display={'flex'} flexDirection={ 'column' } justifyContent={ 'flex-end' }
       >
-        {/* {messages?.map((messages) => {
-          return (<Messages key={messages.timestamp} messageId={messages.content} senderId={""} recipientId={""} content={""} timestamp={""} avatar_url={""} recevied={false} read={false}   />  )
-        })} */}
         { messages? messages.map((message) => {
           return (
 
@@ -196,17 +186,17 @@ const ChatComp = (props: ChatCompProps) => {
               </ChatBubbleRight>
               {/* <Typography >{message.timestamp}</Typography> */}
             </ChatBubble>
-            
             )
           })
-        : ''}
-        <Box component="span" ref={scroll} ></Box>
-        <Box sx={{ display: 'flex',  justifyContent: 'center', alignItems: 'center', backgroundColor: 
-        '#000' }} >
-          <SendMessage scroll={scroll}  />
-        </Box>
+          : ''}
+
+
       </Box>
-  </>
+      <Box component="span" ref={scroll} ></Box>
+      <Box maxHeight={'5em'} display={'flex'} justifyContent={'center'} flex={1}>
+        <SendMessage scroll={scroll}  />
+      </Box>
+  </Grid>
   );
 };
 

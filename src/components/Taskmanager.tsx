@@ -39,17 +39,21 @@ const Taskmanager = () => {
 
 
   return (
+    
     <Grid
       display={"flex"}
       flexDirection={"column"}
       justifyContent={"center"}
       alignItems={"center"}
-      minHeight={"100%"}
+      minHeight={"calc(100vh - 6rem)"}
+      width={'100%'}
+      position={ 'relative' }
       minWidth={"100%"}
       margin={"0 auto"}
+      bgcolor={"#F5F5F5"}
     >
       { loading && "loading..."}
-      <Box minWidth={"8rem"} display={'flex'}  >
+      <Box minWidth={"8rem"} display={'flex'} sx={{py:4}} >
         <FormControl sx={{ m: 1, minWidth: "8rem" }}>
           <InputLabel id="select-list">Select List</InputLabel>
           <Select
@@ -59,7 +63,7 @@ const Taskmanager = () => {
             color="primary"
             onChange={handleSelectList}
           >
-			<MenuItem value={ 'None'}>None</MenuItem>
+			<MenuItem value={'None'}>None</MenuItem>
             { user ? docs?.map((doc) => {
                   return (
                     <MenuItem value={doc.title} key={uid()}>

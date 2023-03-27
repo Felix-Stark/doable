@@ -43,9 +43,10 @@ export default function MenuBar(props: NavBarProps) {
   
   return (
     <React.Fragment>
+      <Grid position={'sticky'} top={0} zIndex={1000}>
       <AppBar color="primary" position="sticky" elevation={0}  sx={{backgroundColor: '#1C1D22'}}>
         <Toolbar>
-          <Grid container spacing={1} alignItems="center">
+          <Grid container  alignItems="center">
             <Grid sx={{ display: { sm: 'none', xs: 'block' } }} item>
               <IconButton
                   color="inherit"
@@ -53,12 +54,12 @@ export default function MenuBar(props: NavBarProps) {
                   onClick={onDrawerToggle}
                   edge="start"
               >
-                <MenuIcon />
+                <MenuIcon sx={{color:'#fff'}}/>
               </IconButton>
             </Grid>
           <Grid item xs />
           <Grid item >
-            <Typography color="inherit" variant="h5" component="h1">
+            <Typography color="inherit" variant="h5" component="h1" sx={{color:'#fff'}}>
                 Doable
             </Typography>
             </Grid>
@@ -66,7 +67,7 @@ export default function MenuBar(props: NavBarProps) {
           </Grid>
         </Toolbar>
       </AppBar>
-      <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0,  backgroundColor: '#1C1D22'  }}>
+      <AppBar component="div" position="sticky" elevation={5} sx={{ zIndex: 0,  backgroundColor: '#1C1D22' , color:'#fff' }}>
         <Tabs value={value} onChange={handleChange} textColor="inherit" indicatorColor="secondary" >
           <Tab value={0} label="Todos" onClick={() => {
             dispatch(toggleTaskmanager(true));
@@ -78,6 +79,7 @@ export default function MenuBar(props: NavBarProps) {
           }} />
         </Tabs>
       </AppBar>
+      </Grid>
     </React.Fragment>
   );
 }

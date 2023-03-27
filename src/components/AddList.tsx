@@ -11,6 +11,7 @@ import { RootState } from '../store';
 import { TodoList } from '../types';
 import { selectedList } from '../features/apiSlice';
 import dayjs from 'dayjs';
+import { Typography } from '@mui/material';
 
 type AddListProps = {
   closeListForm: (val: boolean) => void;
@@ -48,12 +49,14 @@ const AddList: React.FC<AddListProps> = ({ closeListForm, setChosenList }) => {
   return (
     <>
       <Box display={"flex"} flexDirection={"column"}>
-        <h3>List title</h3>
+        <Typography variant="h5" component="h2" >
+          Create new list
+        </Typography>
         <TextField
           label={"List title"}
           type={"text"}
           variant={"standard"}
-          sx={{ color: "#333" }}
+          sx={{ color: "#FFC61A" , py: 2}}
           onChange={(e) =>
             setNewList({
               ...newList,
@@ -66,12 +69,14 @@ const AddList: React.FC<AddListProps> = ({ closeListForm, setChosenList }) => {
           type={"text"}
           helperText={"Email of your contact"}
           variant={"standard"}
-          color={"secondary"}
+          sx={{ bgColor: "main"}}
+
+          // color={"secondary"}
           onChange={(e) => setColaborator(e.target.value)}
         />
-        <Button
+        <Button 
           variant="contained"
-          sx={{ bgColor: "#63ccff" }}
+          sx={{ bgColor: "main" }}
           onClick={handleCreateList}
         >
           Create list

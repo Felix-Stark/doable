@@ -58,9 +58,9 @@ const Navigator = (props: any ) => {
   const lightColor = "rgba(255, 255, 255, 0.7)";
 
 
-  const searchQuery = query(collection(db, 'users', user.email, 'contacts'));
+  // const searchQuery = query(collection(db, 'users', user.email, 'contacts'));
 
-  const [docs, loading, error, snapshot] = useCollectionData(searchQuery);
+  // const [docs, loading, error, snapshot] = useCollectionData(searchQuery);
 
 
   const handleMessagesClicks = () => {
@@ -216,7 +216,7 @@ const Navigator = (props: any ) => {
                     onChange={(e) => setSearchContact(e.target.value)}
                   />
 
-                  <IconButton onClick={getSearchContact}>
+                  <IconButton onClick={getSearchContact} >
                     <SearchIcon sx={{ color: "#fff" }} />
                   </IconButton>
                 </Stack>
@@ -292,8 +292,10 @@ const Navigator = (props: any ) => {
               </List>
               
                 <List>
-                  {/* {docs && (
+{/* 
+                  {docs && (
                      docs?.map((doc) => {
+                      return (
                       <Box
                         sx={{
                           display: "flex",
@@ -363,7 +365,8 @@ const Navigator = (props: any ) => {
                             />
                           </IconButton>
                         </ListItem>
-                      </Box>;
+                      </Box>
+                      );
                     })
                     )} */}
               </List>
@@ -378,3 +381,7 @@ const Navigator = (props: any ) => {
 
 
 export default Navigator
+
+
+// // Dispatch för att lägga till vald kontakt ska sparas i redux state och sen ska den läggas till med recipient valda kontaktens email. 
+// // 
