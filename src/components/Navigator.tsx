@@ -28,6 +28,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import { currentUser } from '../features/apiSlice';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
+// Add messages
+
+import MessageIcon from '@mui/icons-material/Message';
 
 const item = {
   py: 1,
@@ -45,8 +48,8 @@ const itemCategory = {
 };
 
 
-const Navigator = (props: any ) => {
-  const { ...other } = props;
+const Navigator = (props: any) => {
+  const { ...other } = props;   //  <---  this might be the problem
   const [messagesOpen, setMessagesOpen] = React.useState(false);
   const [contactsOpen, setContactsOpen] = React.useState(false);
   const [todosOpen, setTodosOpen] = React.useState(false);
@@ -58,9 +61,9 @@ const Navigator = (props: any ) => {
   const lightColor = "rgba(255, 255, 255, 0.7)";
 
 
-  // const searchQuery = query(collection(db, 'users', user.email, 'contacts'));
+  const searchQuery = query(collection(db, 'users', user.email, 'contacts'));
 
-  // const [docs, loading, error, snapshot] = useCollectionData(searchQuery);
+  const [docs, loading, error, snapshot] = useCollectionData(searchQuery);
 
 
   const handleMessagesClicks = () => {
@@ -89,9 +92,14 @@ const Navigator = (props: any ) => {
     }
   };
 
-  const addContact = () => {
-    setDoc(doc(db, 'users', user.email, 'contacts', foundContact?.username as string), foundContact)
+  const addContact = async () => {
+    if (!foundContact) return;
+    
+    await setDoc(doc(db, 'users', user.email, 'contacts', foundContact?.username as string), foundContact);
+
     console.log('added contact: ', foundContact)
+    
+    setFoundContact(undefined);
   }
 
   
@@ -275,6 +283,7 @@ const Navigator = (props: any ) => {
                       <IconButton
                         sx={{ bgcolor: "#FFC61A", width: 30, height: 30 }}
                         onClick={addContact}
+                        disabled={!foundContact}
                       >
                         <AddIcon
                           sx={{
@@ -292,7 +301,7 @@ const Navigator = (props: any ) => {
               </List>
               
                 <List>
-{/* 
+
                   {docs && (
                      docs?.map((doc) => {
                       return (
@@ -352,14 +361,14 @@ const Navigator = (props: any ) => {
                           </Stack>
                           <IconButton
                             sx={{ bgcolor: "#FFC61A", width: 30, height: 30 }}
-                            onClick={addContact}
+                            // onClick={addContact}
                           >
-                            <AddIcon
+                            <MessageIcon
                               sx={{
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                color: "#000",
+                                color: "#fff",
                                 fontSize: 15,
                               }}
                             />
@@ -368,7 +377,7 @@ const Navigator = (props: any ) => {
                       </Box>
                       );
                     })
-                    )} */}
+                    )}
               </List>
             </Box>
           </Collapse>

@@ -76,7 +76,7 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
         }}
         noValidate
         autoComplete="off" onSubmit={(event) => sendMessage(event)}>
-            <TextField  sx={{borderRadius: '10px 0px 0px 0px', backgroundColor: '#333', flex: '1'}}
+            <TextField  sx={{borderRadius: '10px 0px 0px 0px', bgcolor: "#fff", flex: '1', color: '#fff'}}
                 id='filled-basic'
                 label='Write message'
                 variant='filled'
