@@ -20,12 +20,12 @@ import { auth } from "../firebase-config";
 import { collection, getDocs , doc , where , query, getDoc, setDoc} from "firebase/firestore";
 import { db } from "../firebase-config";
 import { Button, Grid, IconButton, ListItemAvatar, Stack, TextField } from '@mui/material';
-import { ReactReduxContext, useSelector } from 'react-redux';
+import { ReactReduxContext, useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { DoableUser } from '../types';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
-import { currentUser } from '../features/apiSlice';
+import { currentUser, selectedList, toggleTaskmanager } from '../features/apiSlice';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 // Add messages
@@ -53,17 +53,23 @@ const Navigator = (props: any) => {
   const [messagesOpen, setMessagesOpen] = React.useState(false);
   const [contactsOpen, setContactsOpen] = React.useState(false);
   const [todosOpen, setTodosOpen] = React.useState(false);
-  const [contacts, setContacts] = React.useState([]);
+  const [contacts, setContacts] = React.useState<DoableUser[]>([]);
   const [foundContact, setFoundContact] = useState<DoableUser>()
   const [searchContact, setSearchContact] = React.useState('');
   const user = useSelector((state: RootState) => state.api.doUser)
   const navigate = useNavigate();
   const lightColor = "rgba(255, 255, 255, 0.7)";
 
+  const dispatch = useDispatch();
 
-  const searchQuery = query(collection(db, 'users', user.email, 'contacts'));
+  const searchQuery = query(collection(db, `users/${user.email}/contacts`));
+  const [docs, loading, error] = useCollectionData(searchQuery);
 
-  const [docs, loading, error, snapshot] = useCollectionData(searchQuery);
+  // const listQuery = query(collection(db, 'todolists'), where('participants', 'array-contains', user.email))
+  // const [todoLists, listLoading, listError, snapshot] = useCollectionData(listQuery, {
+
+  // });
+
 
 
   const handleMessagesClicks = () => {
@@ -91,6 +97,12 @@ const Navigator = (props: any) => {
     setSearchContact('');
     }
   };
+  // const getContacts = async () => {
+  //   const searchQuery = query(collection(db, 'users', user.email, 'contacts'));
+  //   const userContacts = await getDocs(searchQuery);
+  //   setContacts(userContacts.docs.map(doc => doc.data()) as DoableUser[]);
+  //   setContactsOpen(!contactsOpen);
+  // }
 
   const addContact = async () => {
     if (!foundContact) return;
@@ -101,6 +113,11 @@ const Navigator = (props: any) => {
     
     setFoundContact(undefined);
   }
+
+  const pickAList = (title: string) => {
+    dispatch(selectedList(title));
+    dispatch(toggleTaskmanager(true));
+  };
 
   
   const handleSearchChange = (e: any) => {
@@ -168,7 +185,21 @@ const Navigator = (props: any) => {
           <Collapse in={todosOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText primary="Todos Cards" sx={{ color: "#fff" }} />
+                {user
+                  ? todoLists?.map((list) => {
+                      return (
+                        <ListItemButton
+                          key={list.id}
+                          onClick={() => pickAList(list.title)}
+                        >
+                          <ListItemText
+                            primary={list.title}
+                            sx={{ color: "#fff" }}
+                          />
+                        </ListItemButton>
+                      );
+                    })
+                  : ""}
               </ListItemButton>
             </List>
           </Collapse>
@@ -224,7 +255,7 @@ const Navigator = (props: any) => {
                     onChange={(e) => setSearchContact(e.target.value)}
                   />
 
-                  <IconButton onClick={getSearchContact} >
+                  <IconButton onClick={getSearchContact}>
                     <SearchIcon sx={{ color: "#fff" }} />
                   </IconButton>
                 </Stack>
@@ -250,7 +281,11 @@ const Navigator = (props: any) => {
                       <Avatar
                         src={foundContact.avatar_url}
                         alt="My Avatar"
-                        sx={{ backgroundColor: "#FFC61A", width: 30, height: 30 }}
+                        sx={{
+                          backgroundColor: "#FFC61A",
+                          width: 30,
+                          height: 30,
+                        }}
                       />
                     </ListItemAvatar>
                     <ListItem
@@ -299,12 +334,11 @@ const Navigator = (props: any) => {
                   </Box>
                 )}
               </List>
-              
-                <List>
 
-                  {docs && (
-                     docs?.map((doc) => {
-                      return (
+              <List>
+                {contacts &&
+                  docs?.map((doc) => {
+                    return (
                       <Box
                         sx={{
                           display: "flex",
@@ -314,6 +348,7 @@ const Navigator = (props: any) => {
                           maxWidth: 360,
                           bgcolor: "#141416",
                         }}
+                        key={doc.email}
                       >
                         <ListItemAvatar
                           sx={{
@@ -375,9 +410,8 @@ const Navigator = (props: any) => {
                           </IconButton>
                         </ListItem>
                       </Box>
-                      );
-                    })
-                    )}
+                    );
+                  })}
               </List>
             </Box>
           </Collapse>

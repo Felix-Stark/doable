@@ -16,15 +16,21 @@ import { auth, db } from './firebase-config';
 
 import Grid from '@mui/system/Unstable_Grid/Grid';
 import { doc, getDoc } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth'
 import { useDispatch } from 'react-redux';
 import { currentUser } from './features/apiSlice';
 
 
 function App() {
   const [count, setCount] = useState(0)
-  const [isUser, setIsUser] = useState<boolean>(false)
   const dispatch = useDispatch()
 
+  onAuthStateChanged(auth, async (user) => {
+    if(user) {
+      const isUser = await getDoc(doc(db, 'users', user.email as string));
+      dispatch(currentUser(isUser.data()));
+    }
+  })
   
 
 
