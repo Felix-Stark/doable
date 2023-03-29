@@ -65,10 +65,10 @@ const Navigator = (props: any) => {
   const searchQuery = query(collection(db, `users/${user.email}/contacts`));
   const [docs, loading, error] = useCollectionData(searchQuery);
 
-  // const listQuery = query(collection(db, 'todolists'), where('participants', 'array-contains', user.email))
-  // const [todoLists, listLoading, listError, snapshot] = useCollectionData(listQuery, {
+  const listQuery = query(collection(db, 'todolists'), where('participants', 'array-contains', user.email))
+  const [todoLists, listLoading, listError, snapshot] = useCollectionData(listQuery, {
 
-  // });
+  });
 
 
 
@@ -175,6 +175,7 @@ const Navigator = (props: any) => {
         </ListItem>
         <Box sx={{ bgcolor: "#1C1D22" }}>
           {/* TODOS START */}
+          
           <ListItemButton
             onClick={handleTodosClicks}
             sx={{ color: "#fff", py: 2, px: 3 }}
@@ -185,18 +186,26 @@ const Navigator = (props: any) => {
           <Collapse in={todosOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItemButton sx={{ pl: 4 }}>
-                {user
-                  ? todoLists?.map((list) => {
+                {user ? todoLists?.map((list: any) => {
                       return (
-                        <ListItemButton
+                        <Box sx={{ display: "flex" }}>
+                          <Stack sx={{ display: "flex" }}>
+                        <ListItem
                           key={list.id}
-                          onClick={() => pickAList(list.title)}
+                          onClick={() => pickAList(list.title)} sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                          }}
                         >
-                          <ListItemText
-                            primary={list.title}
-                            sx={{ color: "#fff" }}
-                          />
-                        </ListItemButton>
+                          <Typography 
+                            component="span"
+                            variant="body2" sx={{ display:"inline" ,color: "#fff" }}>
+                            {list.title}
+                          </Typography>
+                        </ListItem>
+                        </Stack>
+                        </Box>
                       );
                     })
                   : ""}
@@ -308,6 +317,7 @@ const Navigator = (props: any) => {
                             display: "inline",
                             color: "#fff",
                             opacity: "0.4",
+                            fontSize: 10,
                           }}
                           component="span"
                           variant="body2"

@@ -161,7 +161,7 @@ const ChatComp = () => {
           <Grid item sx={{bgcolor: '#26272D'}} position={ 'fixed' } top={'6rem'}  width={'100%'} zIndex={'1'} >
               <Tooltip title="Show • Contacts info">
                 <IconButton color="inherit" onClick={toggleDrawer(anchor,true)}>
-                  <Avatar src="" alt="" sx={{backgroundColor: '#FFC61A'}}/>
+                  {/* <Avatar src="" alt="" sx={{backgroundColor: '#FFC61A'}}/> */}
                 </IconButton>
               </Tooltip>
               <Drawer
