@@ -26,12 +26,6 @@ import { RootState } from "../store";
 
 const drawerWidth = 256;
 
-type Task = {
-  taskId: string;
-  title: string;
-  desc: string;
-  location: string;
-};
 
 // Theme för att kunna använda material-ui komponenter
 
@@ -182,9 +176,8 @@ theme = {
 
 
 const Dashboard = () => {
-  const [todo, setTodo] = useState("");
-  const [todos, setTodos] = useState<DocumentData[]>()
-  const [showTasks, setShowTasks] = useState<Task[]>([]);
+
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.api.doUser)
@@ -205,7 +198,6 @@ const Dashboard = () => {
           })
         } else {
           navigate('/')
-
         }
 	}, [])
 
@@ -228,7 +220,7 @@ const Dashboard = () => {
           <Navigator
             PaperProps={{ style: { width: drawerWidth } }}
             sx={{ display: { sm: 'block', xs: 'none' } }}
-          />
+          /> 
         </Box>
         <Box sx={{  display: 'flex', flexDirection: 'column', width: '100%', height: '100%', bgcolor: '#141416'  }}>
           <NavBar onDrawerToggle={handleDrawerToggle} />

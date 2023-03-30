@@ -13,6 +13,7 @@ const initialState = {
   doUser: {} as DoableUser,
   currentTodos: [] as Todo[],
   addedTodo: '',
+  messageRecipient: {} as DoableUser,
 };
 
 export const apiSlice = createSlice({
@@ -34,7 +35,7 @@ export const apiSlice = createSlice({
     currentUser: (state, action: PayloadAction<DoableUser>) => {
       state.doUser = action.payload;
     },
-    selectedList: (state, action) => {
+    selectedList: (state, action: PayloadAction<string>) => {
       state.currentList = action.payload;
     },
     todos: (state, action: PayloadAction<Todo[]>) => {
@@ -42,10 +43,13 @@ export const apiSlice = createSlice({
     },
     addTodo: (state, action: PayloadAction<string>) => {
       state.addedTodo = action.payload;
+    },
+    messRecipient: (state, action: PayloadAction<DoableUser>) => {
+      state.messageRecipient = action.payload;
     }
   },
 });
 
-export const { colorMode, showLoader, currentUser, selectedList, todos, toggleTaskmanager, toggleChat, addTodo } = apiSlice.actions;
+export const { colorMode, showLoader, currentUser, selectedList, todos, toggleTaskmanager, toggleChat, addTodo, messRecipient } = apiSlice.actions;
 
 export default apiSlice.reducer;

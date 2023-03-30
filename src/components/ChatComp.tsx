@@ -25,6 +25,7 @@ import Drawer from "@mui/material/Drawer";
 import { Message } from "../types";
 import { styled } from '@mui/material/styles';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { uid } from "uid";
 
 
 
@@ -51,20 +52,25 @@ const itemCategory = {
 
 const ChatComp = () => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [receivedMessages, setReceivedMessages] = useState<Message[]>([])
   const [tasksOpen, setTaskOpen] = React.useState(true);
   const user = useSelector((state: RootState) => state.api.doUser)
   const [state, setState] = React.useState({
     right: false,
   });
-  
+  const currentContact = useSelector((state: RootState) => state.api.messageRecipient)
   
 
   useEffect(() => {
-    const conversation = query(collection(db, "messages"), where('senderId', '==', user.email), orderBy("timestamp"), limit(50));
-    onSnapshot(conversation, (snapshot) => {
+    const sentMessages = query(collection(db, "messages"), where('senderId', '==', user.email), orderBy("timestamp"), limit(50));
+    onSnapshot(sentMessages, (snapshot) => {
       setMessages(snapshot.docs.map(doc => doc.data()) as unknown as Message[])
-      
-    })
+    });
+    const receivedMessages = query(collection(db, "messages"), where('recipient', '==', user.email), orderBy("timestamp"), limit(50));
+    onSnapshot(receivedMessages, (snapshot) => {
+      setReceivedMessages(snapshot.docs.map(doc => doc.data()) as unknown as Message[])
+    });
+
   }, []);
   
   const scroll = useRef<HTMLSpanElement>(null);
@@ -98,10 +104,10 @@ const ChatComp = () => {
         </ListItem>
       </List>
       <List sx={{display: 'flex',flexDirection:'column', justifyContent: 'center', alignItems: 'center', paddingTop: 2}}>
-            <Avatar src="" alt="" sx={{backgroundColor: '#FFC61A' ,width: 95, height: 95}}/>
-        <Typography variant="h6" sx={{color: '#fff', fontWeight: '300', fontSize: 16, paddingTop: 2}}>Name
+            <Avatar src={ currentContact.avatar_url } alt="" sx={{backgroundColor: '#FFC61A' ,width: 95, height: 95}}/>
+        <Typography variant="h6" sx={{color: '#fff', fontWeight: '300', fontSize: 16, paddingTop: 2}}> { currentContact.username }
         </Typography>
-        <Typography variant="h6" sx={{color: 'grey', fontWeight: '300', fontSize: 16, paddingTop: .5 }}>Email
+        <Typography variant="h6" sx={{color: 'grey', fontWeight: '300', fontSize: 16, paddingTop: .5 }}> { currentContact.email }
         </Typography>
       </List>
       <Divider />
@@ -147,7 +153,7 @@ const ChatComp = () => {
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: alignRight ? '#BDD2B6' : '#3A3A3A',
-    padding: theme.spacing(1),
+    padding: theme.spacing(2),
     borderRadius: '10px',
     maxWidth: '60%',
   }));
@@ -161,7 +167,7 @@ const ChatComp = () => {
           <Grid item sx={{bgcolor: '#26272D'}} position={ 'fixed' } top={'6rem'}  width={'100%'} zIndex={'1'} >
               <Tooltip title="Show • Contacts info">
                 <IconButton color="inherit" onClick={toggleDrawer(anchor,true)}>
-                  <Avatar src="" alt="" sx={{backgroundColor: '#FFC61A'}}/>
+                  <Avatar src={ currentContact?.avatar_url} alt={ currentContact?.email} sx={{backgroundColor: '#FFC61A'}}/>
                 </IconButton>
               </Tooltip>
               <Drawer
@@ -176,6 +182,7 @@ const ChatComp = () => {
         ))}
       <Box position={ 'relative' } bottom={0} right={0}  width={ '100%' } minHeight={'100%'} display={'flex'} flexDirection={ 'column' } justifyContent={ 'flex-end' }
       >
+        <>
         { messages? messages.map((message) => {
           return (
 
@@ -190,6 +197,17 @@ const ChatComp = () => {
           })
           : ''}
 
+          { receivedMessages ? receivedMessages.map((rec) => {
+            <ChatBubble key={uid()} alignRight={rec.senderId === user.email}>
+              <Avatar sx={{width: "1.5em", height: "1.5em"}} src={currentContact.avatar_url} alt="avatar" />
+              <ChatBubbleRight alignRight={rec.senderId === user.email}>
+                <Typography >{rec.content}</Typography>
+              </ChatBubbleRight>
+              {/* <Typography >{message.timestamp}</Typography> */}
+            </ChatBubble>
+          }) : '' }
+
+          </>
 
       </Box>
       <Box component="span" ref={scroll} ></Box>

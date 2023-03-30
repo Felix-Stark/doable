@@ -20,7 +20,8 @@ interface SendMessageProps {
 const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
 
     const user = useSelector((state: RootState) => state.api.doUser);
-    
+    const currentContact = useSelector((state: RootState) => state.api.messageRecipient);
+
     const [message, setMessage] = useState({
         messageId: '',
         senderId: user?.email || '', 
@@ -51,7 +52,7 @@ const SendMessage: React.FC<SendMessageProps> = ({scroll}) => {
             ...message,
             messageId: uid(),
             senderId: user?.email || '', //skickarens email
-            recipient: '', //mottagares email
+            recipient: currentContact.email, //mottagares email
             timestamp: dayjs().format(),
         }
         event.preventDefault();

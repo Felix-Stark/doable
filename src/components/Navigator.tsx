@@ -17,20 +17,21 @@ import { signOut, User } from "firebase/auth";
 import { auth } from "../firebase-config";
 
 // To get contacts
-import { collection, getDocs , doc , where , query, getDoc, setDoc} from "firebase/firestore";
+import { collection, getDocs , doc , where , query, getDoc, setDoc, onSnapshot} from "firebase/firestore";
 import { db } from "../firebase-config";
 import { Button, Grid, IconButton, ListItemAvatar, Stack, TextField } from '@mui/material';
 import { ReactReduxContext, useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { DoableUser } from '../types';
+import { DoableUser, TodoList } from '../types';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
-import { currentUser, selectedList, toggleTaskmanager } from '../features/apiSlice';
+import { currentUser, messRecipient, selectedList, toggleChat, toggleTaskmanager } from '../features/apiSlice';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 // Add messages
 
 import MessageIcon from '@mui/icons-material/Message';
+import { uid } from 'uid';
 
 const item = {
   py: 1,
@@ -56,20 +57,21 @@ const Navigator = (props: any) => {
   const [contacts, setContacts] = React.useState<DoableUser[]>([]);
   const [foundContact, setFoundContact] = useState<DoableUser>()
   const [searchContact, setSearchContact] = React.useState('');
+  // const [todoLists, setTodoLists] = useState<TodoList[]>()
   const user = useSelector((state: RootState) => state.api.doUser)
   const navigate = useNavigate();
   const lightColor = "rgba(255, 255, 255, 0.7)";
-
   const dispatch = useDispatch();
 
   const searchQuery = query(collection(db, `users/${user.email}/contacts`));
   const [docs, loading, error] = useCollectionData(searchQuery);
 
-  // const listQuery = query(collection(db, 'todolists'), where('participants', 'array-contains', user.email))
-  // const [todoLists, listLoading, listError, snapshot] = useCollectionData(listQuery, {
+  // const todoListQuery = query(
+  //   collection(db, 'todolists'),
+  //   where('participants', 'array-contains', user.email)
+  // );
 
-  // });
-
+  const [todoLists, listLoading, listError, snapshot] = useCollectionData(query(collection(db, 'todolists')));
 
 
   const handleMessagesClicks = () => {
@@ -84,6 +86,9 @@ const Navigator = (props: any) => {
 
   const handleTodosClicks = () => {
     setTodosOpen(!todosOpen);
+    console.log('todoLists: ', todoLists);
+    console.log('user: ', user);
+
   };
 
   // Get contacts from firestore
@@ -97,17 +102,12 @@ const Navigator = (props: any) => {
     setSearchContact('');
     }
   };
-  // const getContacts = async () => {
-  //   const searchQuery = query(collection(db, 'users', user.email, 'contacts'));
-  //   const userContacts = await getDocs(searchQuery);
-  //   setContacts(userContacts.docs.map(doc => doc.data()) as DoableUser[]);
-  //   setContactsOpen(!contactsOpen);
-  // }
+
 
   const addContact = async () => {
     if (!foundContact) return;
     
-    await setDoc(doc(db, 'users', user.email, 'contacts', foundContact?.username as string), foundContact);
+    await setDoc(doc(db, 'users', user.email, 'contacts', foundContact?.username as string), foundContact)
 
     console.log('added contact: ', foundContact)
     
@@ -119,6 +119,11 @@ const Navigator = (props: any) => {
     dispatch(toggleTaskmanager(true));
   };
 
+  const messageContact = (doc: DoableUser) => {
+    console.log('clicked message contact')
+    dispatch(messRecipient(doc));
+    dispatch(toggleChat(true));
+  }
   
   const handleSearchChange = (e: any) => {
     setSearchContact(e.target.value);
@@ -184,27 +189,26 @@ const Navigator = (props: any) => {
           </ListItemButton>
           <Collapse in={todosOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                {user
-                  ? todoLists?.map((list) => {
-                      return (
-                        <ListItemButton
-                          key={list.id}
-                          onClick={() => pickAList(list.title)}
-                        >
-                          <ListItemText
-                            primary={list.title}
-                            sx={{ color: "#fff" }}
-                          />
-                        </ListItemButton>
-                      );
-                    })
-                  : ""}
-              </ListItemButton>
+              {todoLists
+                ? todoLists?.map((list) => {
+                    return (
+                      <ListItemButton
+                        sx={{ pl: 6 }}
+                        key={uid()}
+                        onClick={() => pickAList(list.title)}
+                      >
+                        <ListItemText
+                          primary={"- " + list.title}
+                          sx={{ color: "#fff" }}
+                        />
+                      </ListItemButton>
+                    );
+                  })
+                : ""}
             </List>
           </Collapse>
           {/* MESSAGES START */}
-          <ListItemButton
+          {/* <ListItemButton
             onClick={handleMessagesClicks}
             sx={{ color: "#fff", py: 2, px: 3 }}
           >
@@ -217,7 +221,7 @@ const Navigator = (props: any) => {
                 <ListItemText primary="Messages Cards" sx={{ color: "#fff" }} />
               </ListItemButton>
             </List>
-          </Collapse>
+          </Collapse> */}
           {/* CONTACTS START */}
           <ListItemButton
             onClick={handleContactsClicks}
@@ -264,7 +268,8 @@ const Navigator = (props: any) => {
                   <Box
                     sx={{
                       display: "flex",
-                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "space-between",
                       width: "100%",
                       height: "3em",
                       maxWidth: 360,
@@ -288,61 +293,63 @@ const Navigator = (props: any) => {
                         }}
                       />
                     </ListItemAvatar>
-                    <ListItem
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Stack>
-                        <Typography
-                          sx={{ display: "inline", color: "#fff" }}
-                          component="span"
-                          variant="body2"
-                        >
-                          {foundContact.username}
-                        </Typography>
-                        <Typography
-                          sx={{
-                            display: "inline",
-                            color: "#fff",
-                            opacity: "0.4",
-                          }}
-                          component="span"
-                          variant="body2"
-                        >
-                          {foundContact.email}
-                        </Typography>
-                      </Stack>
-                      <IconButton
-                        sx={{ bgcolor: "#FFC61A", width: 30, height: 30 }}
-                        onClick={addContact}
-                        disabled={!foundContact}
+
+                    <Stack>
+                      <Typography
+                        sx={{ display: "inline", color: "#fff" }}
+                        component="span"
+                        variant="body2"
                       >
-                        <AddIcon
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: "#000",
-                            fontSize: 15,
-                          }}
-                        />
-                      </IconButton>
-                    </ListItem>
+                        {foundContact.username}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          display: "inline",
+                          color: "#fff",
+                          opacity: "0.4",
+                          fontSize: 10,
+                          maxWidth: "9rem",
+                          overFlow: "hidden",
+                        }}
+                        component="span"
+                        variant="body2"
+                      >
+                        {foundContact.email}
+                      </Typography>
+                    </Stack>
+                    <IconButton
+                      sx={{ bgcolor: "#FFC61A", width: 30, height: 30 }}
+                      onClick={addContact}
+                      disabled={!foundContact}
+                    >
+                      <AddIcon
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "#000",
+                          fontSize: 15,
+                        }}
+                      />
+                    </IconButton>
                   </Box>
                 )}
               </List>
 
               <List>
+                <Typography
+                  sx={{ display: "inline", color: "#fff", textAlign: 'center', pl: 4 }}
+                  component="span"
+                  variant="body2"
+                > Added Contacts </Typography>
                 {contacts &&
                   docs?.map((doc) => {
                     return (
-                      <Box
+                      <ListItemButton
                         sx={{
                           display: "flex",
                           alignContent: "center",
+                          justifyContent: "space-between",
                           width: "100%",
                           height: "3em",
                           maxWidth: 360,
@@ -367,49 +374,44 @@ const Navigator = (props: any) => {
                             }}
                           />
                         </ListItemAvatar>
-                        <ListItem
-                          sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Stack>
-                            <Typography
-                              sx={{ display: "inline", color: "#fff" }}
-                              component="span"
-                              variant="body2"
-                            >
-                              {doc.username}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                display: "inline",
-                                color: "#fff",
-                                opacity: "0.4",
-                              }}
-                              component="span"
-                              variant="body2"
-                            >
-                              {doc.email}
-                            </Typography>
-                          </Stack>
-                          <IconButton
-                            sx={{ bgcolor: "#FFC61A", width: 30, height: 30 }}
-                            // onClick={addContact}
+
+                        <Stack>
+                          <Typography
+                            sx={{ display: "inline", color: "#fff" }}
+                            component="span"
+                            variant="body2"
                           >
-                            <MessageIcon
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                color: "#fff",
-                                fontSize: 15,
-                              }}
-                            />
-                          </IconButton>
-                        </ListItem>
-                      </Box>
+                            {doc.username}
+                          </Typography>
+                          <Typography
+                            sx={{
+                              display: "inline",
+                              color: "#fff",
+                              opacity: "0.4",
+                              maxWidth: "9rem",
+                              fontSize: 10,
+                            }}
+                            component="span"
+                            variant="body2"
+                          >
+                            {doc.email}
+                          </Typography>
+                        </Stack>
+                        <IconButton
+                          sx={{ bgcolor: "#FFC61A", width: 30, height: 30 }}
+                          onClick={() => messageContact(doc as DoableUser)}
+                        >
+                          <MessageIcon
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              color: "#fff",
+                              fontSize: 15,
+                            }}
+                          />
+                        </IconButton>
+                      </ListItemButton>
                     );
                   })}
               </List>

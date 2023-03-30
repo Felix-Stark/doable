@@ -25,9 +25,9 @@ const Taskmanager = () => {
 	const [chosenList, setChosenList] = useState('')
 	
 
-  const todoListQuery = query(collection(db, "todolists"), where('participants', 'array-contains', user.email));
+  // const todoListQuery = query(collection(db, "todolists"), where('participants', 'array-contains', user.email));
 
-  const [docs, loading, error, snapshot] = useCollectionData(todoListQuery);
+  const [docs, loading, error, snapshot] = useCollectionData(query(collection(db, 'todolists')));
   
     
 
